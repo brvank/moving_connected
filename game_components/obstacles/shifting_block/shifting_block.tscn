@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://o25c0m2srn2g"]
+
+[ext_resource type="Script" uid="uid://dc8sdgxe4gxuw" path="res://game_components/obstacles/shifting_block/shifting_block.gd" id="1_pp77o"]
+
+[node name="ShiftingBlock" type="StaticBody2D" unique_id=1146901553]
+script = ExtResource("1_pp77o")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=640072854]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=90517690]

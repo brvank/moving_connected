@@ -1,0 +1,13 @@
+{
+	"w":[[0,0],[0,0]], -> window size (left, top, right, bottom)
+	"p":[[0,0],[0,0]], -> players location (2 players) (x,y)
+	"e":[[0,0],[0,0]], -> exits location (2 exits) (x,y)
+	"o":{ -> obstacles location
+		"fb":[[0,0],[0,0]], -> fixed blocks (x,y)
+		"sb":[[0,0,0],[0,0,0]], -> shifting blocks (x,y,d) -> direction (0-horz, 1-vert)
+		"sg":[[0,0],[0,0]], -> signal gates (x,y) -> signal to turn on and off with player interaction
+		"fd":[[0,0],[0,0]], -> fixed danger zones (x,Y)
+		"sd":[[0,0,0],[0,0,0]], -> shifting danger zones (x,y,d) -> direction (0-horz, 1-vert)
+		"td":[[0,0],[0,0]], -> timed danger zones (x,y) -> time fixed for every level
+	}
+}

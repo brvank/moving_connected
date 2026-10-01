@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://ywe7lxqdoni0"]
+
+[ext_resource type="Script" uid="uid://dqaq473pcrv12" path="res://game_components/obstacles/fixed_block/fixed_block.gd" id="1_8c4mg"]
+
+[node name="FixedBlock" type="StaticBody2D" unique_id=1821992930]
+script = ExtResource("1_8c4mg")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2063368773]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1469643433]
