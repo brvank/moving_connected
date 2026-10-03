@@ -10,7 +10,7 @@ var exitsLocations: Array[SinglePointPosition]
 var fixedBlocksLocations: Array[SinglePointPosition]
 var shiftingBlocksLocations: Array[SinglePointPosition]
 
-var signalGatesLocations: Array[SinglePointPosition]
+var signalGatesLocations: Array[SignalGateData]
 
 var fixedDangerZonesLocations: Array[SinglePointPosition]
 var shiftingDangerZonesLocations: Array[SinglePointPosition]

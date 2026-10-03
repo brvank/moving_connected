@@ -5,7 +5,7 @@
 	"o":{ -> obstacles location
 		"fb":[[0,0],[0,0]], -> fixed blocks (x,y)
 		"sb":[[0,0,0],[0,0,0]], -> shifting blocks (x,y,d) -> direction (0-vertical, 1-horizontal)
-		"sg":[[0,0],[0,0]], -> signal gates (x,y) -> signal to turn on and off with player interaction
+		"sg":[[0,0,0,0],[0,0,0,0]], -> signal gates (block_x, block_y, switch_x, switch_y) -> switch activates/deactivates the gate block
 		"fd":[[0,0],[0,0]], -> fixed danger zones (x,Y)
 		"sd":[[0,0,0],[0,0,0]], -> shifting danger zones (x,y,d) -> direction (0-vertical, 1-horizontal)
 		"td":[[0,0],[0,0]], -> timed danger zones (x,y) -> time fixed for every level

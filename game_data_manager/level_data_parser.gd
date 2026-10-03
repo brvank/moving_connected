@@ -30,7 +30,7 @@ static func _createLevelDataObject(dict: Dictionary) -> LevelData:
 	#setting the obstacles
 	levelData.fixedBlocksLocations = _extractSinglePointPositions(dict.o.fb)
 	levelData.shiftingBlocksLocations = _extractSinglePointPositions(dict.o.sb, true)
-	levelData.signalGatesLocations = _extractSinglePointPositions(dict.o.sg)
+	levelData.signalGatesLocations = _extractSignalGatePositions(dict.o.sg)
 	levelData.fixedDangerZonesLocations = _extractSinglePointPositions(dict.o.fd)
 	levelData.shiftingDangerZonesLocations = _extractSinglePointPositions(dict.o.sd, true)
 	levelData.timedDangerZonesLocations = _extractSinglePointPositions(dict.o.td)
@@ -50,3 +50,12 @@ static func _extractSinglePointPositions(arr: Array, is_shifting: bool = false) 
 
 static func _arrayToVector2(arr: Array) -> Vector2:
 	return Vector2(arr[0], arr[1])
+
+static func _extractSignalGatePositions(arr: Array) -> Array[SignalGateData]:
+	var result: Array[SignalGateData] = []
+	for ele in arr:
+		if ele is Array and ele.size() >= 4:
+			var block_pos = Vector2(ele[0], ele[1])
+			var switch_pos = Vector2(ele[2], ele[3])
+			result.append(SignalGateData.new(block_pos, switch_pos))
+	return result

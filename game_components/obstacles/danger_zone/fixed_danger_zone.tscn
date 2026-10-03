@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game_components/obstacles/danger_zone/fixed_danger_zone.gd" id="1_fd"]
+
+[node name="FixedDangerZone" type="Area2D"]
+script = ExtResource("1_fd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]

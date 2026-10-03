@@ -3,3 +3,8 @@ class_name FileNames
 const Level = "res://levels_data/level.json"
 const FixedBlocks = "res://game_components/obstacles/fixed_block/fixed_block.tscn"
 const ShiftingBlocks = "res://game_components/obstacles/shifting_block/shifting_block.tscn"
+const ExitPoint = "res://game_components/obstacles/exit_point/exit_point.tscn"
+const SignalGate = "res://game_components/obstacles/signal_gate/signal_gate.tscn"
+const FixedDangerZone = "res://game_components/obstacles/danger_zone/fixed_danger_zone.tscn"
+const ShiftingDangerZone = "res://game_components/obstacles/danger_zone/shifting_danger_zone.tscn"
+const TimedDangerZone = "res://game_components/obstacles/danger_zone/timed_danger_zone.tscn"
