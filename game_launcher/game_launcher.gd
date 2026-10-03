@@ -38,7 +38,7 @@ func _setupWalls(levelData: LevelData) -> void:
 	var textureWallTop = DrawableTexture2D.new()
 	textureWallTop.setup(right - left, wallSize, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, Color(1,0.5,1))
 	spriteWallTop.texture = textureWallTop
-	spriteWallTop.position = Vector2((right - left)/2, top + originOffset)
+	spriteWallTop.position = Vector2(left + (right - left)/2, top + originOffset)
 	var csWallTop = CollisionShape2D.new()
 	var sWallTop = RectangleShape2D.new()
 	sWallTop.size = Vector2(right - left, wallSize)
@@ -50,7 +50,7 @@ func _setupWalls(levelData: LevelData) -> void:
 	var textureWallLeft = DrawableTexture2D.new()
 	textureWallLeft.setup(wallSize, bottom - top, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, Color(1,0.5,1))
 	spriteWallLeft.texture = textureWallLeft
-	spriteWallLeft.position = Vector2(left + originOffset, (bottom - top)/2)
+	spriteWallLeft.position = Vector2(left + originOffset, top + (bottom - top)/2)
 	var csWallLeft = CollisionShape2D.new()
 	var sWallLeft = RectangleShape2D.new()
 	sWallLeft.size = Vector2(wallSize, bottom - top)
@@ -62,7 +62,7 @@ func _setupWalls(levelData: LevelData) -> void:
 	var textureWallBottom = DrawableTexture2D.new()
 	textureWallBottom.setup(right - left, wallSize, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, Color(1,0.5,1))
 	spriteWallBottom.texture = textureWallBottom
-	spriteWallBottom.position = Vector2((right - left)/2, bottom - originOffset)
+	spriteWallBottom.position = Vector2(left + (right - left)/2, bottom - originOffset)
 	var csWallBottom = CollisionShape2D.new()
 	var sWallBottom = RectangleShape2D.new()
 	sWallBottom.size = Vector2(right - left, wallSize)
@@ -74,7 +74,7 @@ func _setupWalls(levelData: LevelData) -> void:
 	var textureWallRight = DrawableTexture2D.new()
 	textureWallRight.setup(wallSize, bottom - top, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, Color(1,0.5,1))
 	spriteWallRight.texture = textureWallRight
-	spriteWallRight.position = Vector2(right - originOffset, (bottom - top)/2)
+	spriteWallRight.position = Vector2(right - originOffset, top + (bottom - top)/2)
 	var csWallRight = CollisionShape2D.new()
 	var sWallRight = RectangleShape2D.new()
 	sWallRight.size = Vector2(wallSize, bottom - top)

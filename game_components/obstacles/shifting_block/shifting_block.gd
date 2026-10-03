@@ -23,7 +23,7 @@ func _ready() -> void:
 	)
 	sprite2d.texture = texture2d
 	var rShape2d = RectangleShape2D.new()
-	rShape2d.size = Vector2(width, height, )
+	rShape2d.size = Vector2(width, height)
 	cs2d.shape = rShape2d
 	_startPosition = position
 	_startMovement()
