@@ -1,6 +1,7 @@
 extends Node
 
 # Scene preloads
+const PlayerScene = preload(FileNames.Player)
 const FixedBlocksScene = preload(FileNames.FixedBlocks)
 const ShiftingBlocksScene = preload(FileNames.ShiftingBlocks)
 const ExitPointScene = preload(FileNames.ExitPoint)
@@ -10,9 +11,9 @@ const ShiftingDangerZoneScene = preload(FileNames.ShiftingDangerZone)
 const TimedDangerZoneScene = preload(FileNames.TimedDangerZone)
 
 # Runtime state
-var _player1: CharacterBody2D
-var _player2: CharacterBody2D
+var _players: Array[Node2D] = []
 var _camera: Camera2D
+var _current_camera_index: int = 0
 var _exit_points: Array = []
 var _level_complete: bool = false
 
@@ -27,33 +28,35 @@ func _ready() -> void:
 	_setupWalls(levelData)
 	_setupPlayers(levelData)
 	_setupCamera(levelData)
+	_setupLine()
 	_setupBlocks(levelData)
 	_setupExitPoints(levelData)
 	_setupSignalGates(levelData)
 	_setupDangerZones(levelData)
 
-func _physics_process(_delta: float) -> void:
-	if _camera and _player1 and _player2:
-		_update_camera()
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("switch_camera"):
+		_cycle_camera()
 
 # ── Players ───────────────────────────────────────────────────────────────────
 
 func _setupPlayers(levelData: LevelData) -> void:
-	_player1 = $Player
-	_player2 = $Player2
-
-	if levelData.playersLocations.size() >= 2:
-		_player1.position = levelData.playersLocations[0].position()
-		_player2.position = levelData.playersLocations[1].position()
-	elif levelData.playersLocations.size() == 1:
-		_player1.position = levelData.playersLocations[0].position()
+	for playerLoc in levelData.playersLocations:
+		var playerInstance = PlayerScene.instantiate()
+		playerInstance.position = playerLoc.position()
+		add_child(playerInstance)
+		_players.append(playerInstance)
 
 # ── Camera ────────────────────────────────────────────────────────────────────
 
 func _setupCamera(levelData: LevelData) -> void:
-	# Reparent camera from Player to root so it can track both players
-	_camera = $Player/Camera2D
-	_camera.reparent(self)
+	if _players.is_empty():
+		return
+
+	# Create camera and attach to first player
+	_camera = Camera2D.new()
+	_camera.position_smoothing_enabled = true
+	_camera.process_callback = Camera2D.CAMERA2D_PROCESS_PHYSICS
 
 	# Set camera limits from level bounds
 	_camera.limit_left = int(levelData.windowSize.left)
@@ -61,9 +64,21 @@ func _setupCamera(levelData: LevelData) -> void:
 	_camera.limit_right = int(levelData.windowSize.right)
 	_camera.limit_bottom = int(levelData.windowSize.bottom)
 
-func _update_camera() -> void:
-	# Follow the midpoint between both players
-	_camera.global_position = (_player1.global_position + _player2.global_position) / 2.0
+	_current_camera_index = 0
+	_players[0].add_child(_camera)
+
+func _cycle_camera() -> void:
+	if _players.size() <= 1:
+		return
+	_current_camera_index = (_current_camera_index + 1) % _players.size()
+	_camera.reparent(_players[_current_camera_index])
+	_camera.position = Vector2.ZERO
+
+# ── Line ──────────────────────────────────────────────────────────────────────
+
+func _setupLine() -> void:
+	var line = $Line2D
+	line.set_tracked_nodes(_players)
 
 # ── Walls ─────────────────────────────────────────────────────────────────────
 

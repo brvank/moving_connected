@@ -1,17 +1,12 @@
 [gd_scene format=3 uid="uid://cjakiwlimuinx"]
 
-[ext_resource type="Script" uid="uid://d2vr06dajoska" path="res://prototype/character_body_2d.gd" id="1_24a28"]
 [ext_resource type="Script" uid="uid://comjlr7a4s3fc" path="res://game_launcher/game_launcher.gd" id="1_ekn36"]
-[ext_resource type="Texture2D" uid="uid://bb3btspgn5rs8" path="res://icon.svg" id="2_p732r"]
 [ext_resource type="Script" uid="uid://j6b05fdewk4r" path="res://prototype/line_2d.gd" id="3_p732r"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5knxn"]
-size = Vector2(32, 32)
-
-[node name="Prototype" type="Node2D" unique_id=54991275]
+[node name="Prototype" type="Node2D" unique_id=1152282244]
 script = ExtResource("1_ekn36")
 
-[node name="Line2D" type="Line2D" parent="." unique_id=440942461 node_paths=PackedStringArray("node_a", "node_b")]
+[node name="Line2D" type="Line2D" parent="." unique_id=697328363]
 position = Vector2(0, 8)
 closed = true
 default_color = Color(0.5686275, 0.5372549, 1, 0.49803922)
@@ -19,43 +14,9 @@ joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
 script = ExtResource("3_p732r")
-node_a = NodePath("../Player")
-node_b = NodePath("../Player2")
 
-[node name="Player" type="CharacterBody2D" parent="." unique_id=2015023537]
-position = Vector2(432, 176)
-script = ExtResource("1_24a28")
+[node name="Env" type="Node2D" parent="." unique_id=417289671]
 
-[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=476012564]
-position = Vector2(0, -1.9073486e-06)
-scale = Vector2(0.25, 0.25000003)
-texture = ExtResource("2_p732r")
+[node name="Walls" type="StaticBody2D" parent="Env" unique_id=58766838]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=394486684]
-shape = SubResource("RectangleShape2D_5knxn")
-
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=645715989]
-process_callback = 0
-limit_left = 0
-limit_top = -8
-limit_right = 1152
-limit_bottom = 296
-position_smoothing_enabled = true
-
-[node name="Player2" type="CharacterBody2D" parent="." unique_id=1929134033]
-position = Vector2(168, 176)
-script = ExtResource("1_24a28")
-
-[node name="Sprite2D" type="Sprite2D" parent="Player2" unique_id=611225837]
-position = Vector2(0, -1.9073486e-06)
-scale = Vector2(0.25, 0.25000003)
-texture = ExtResource("2_p732r")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player2" unique_id=434384523]
-shape = SubResource("RectangleShape2D_5knxn")
-
-[node name="Env" type="Node2D" parent="." unique_id=995856367]
-
-[node name="Walls" type="StaticBody2D" parent="Env" unique_id=2126174755]
-
-[node name="Blocks" type="Node2D" parent="Env" unique_id=1248701691]
+[node name="Blocks" type="Node2D" parent="Env" unique_id=1754492227]

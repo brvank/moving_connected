@@ -1,6 +1,7 @@
 class_name FileNames
 
 const Level = "res://levels_data/level.json"
+const Player = "res://game_components/player/player.tscn"
 const FixedBlocks = "res://game_components/obstacles/fixed_block/fixed_block.tscn"
 const ShiftingBlocks = "res://game_components/obstacles/shifting_block/shifting_block.tscn"
 const ExitPoint = "res://game_components/obstacles/exit_point/exit_point.tscn"
