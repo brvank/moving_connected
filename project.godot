@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="MovingConnected"
-run/main_scene="uid://cjakiwlimuinx"
+run/main_scene="res://screens/main_menu/main_menu.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://game_manager/game_manager.gd"
 
 [display]
 

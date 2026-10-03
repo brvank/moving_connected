@@ -9,3 +9,6 @@ const SignalGate = "res://game_components/obstacles/signal_gate/signal_gate.tscn
 const FixedDangerZone = "res://game_components/obstacles/danger_zone/fixed_danger_zone.tscn"
 const ShiftingDangerZone = "res://game_components/obstacles/danger_zone/shifting_danger_zone.tscn"
 const TimedDangerZone = "res://game_components/obstacles/danger_zone/timed_danger_zone.tscn"
+const GameDialogs = "res://game_components/ui/game_dialogs.tscn"
+const MainMenu = "res://screens/main_menu/main_menu.tscn"
+const LevelSelect = "res://screens/level_select/level_select.tscn"

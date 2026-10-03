@@ -1,0 +1,138 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://game_components/ui/game_dialogs.gd" id="1_dialogs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
+bg_color = Color(0.12, 0.12, 0.16, 0.95)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 30.0
+content_margin_top = 24.0
+content_margin_right = 30.0
+content_margin_bottom = 24.0
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.3, 0.45, 0.8)
+
+[node name="GameDialogs" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_dialogs")
+
+[node name="Overlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.04, 0.08, 0.65)
+
+[node name="CenterContainer" type="CenterContainer" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOverPanel" type="PanelContainer" parent="Overlay/CenterContainer"]
+custom_minimum_size = Vector2(420, 220)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Overlay/CenterContainer/GameOverPanel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
+theme_override_font_sizes/font_size = 28
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 15
+text = "A player touched a hazard zone!"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="RetryButton" type="Button" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer/ButtonsHBox"]
+custom_minimum_size = Vector2(100, 38)
+layout_mode = 2
+text = "Retry"
+
+[node name="LevelsButton" type="Button" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer/ButtonsHBox"]
+custom_minimum_size = Vector2(100, 38)
+layout_mode = 2
+text = "Levels"
+
+[node name="HomeButton" type="Button" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer/ButtonsHBox"]
+custom_minimum_size = Vector2(100, 38)
+layout_mode = 2
+text = "Home"
+
+[node name="LevelCompletePanel" type="PanelContainer" parent="Overlay/CenterContainer"]
+custom_minimum_size = Vector2(440, 220)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Overlay/CenterContainer/LevelCompletePanel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.95, 0.4, 1)
+theme_override_font_sizes/font_size = 28
+text = "LEVEL COMPLETE!"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 15
+text = "All exit portals reached simultaneously!"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="NextLevelButton" type="Button" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer/ButtonsHBox"]
+custom_minimum_size = Vector2(105, 38)
+layout_mode = 2
+text = "Next Level"
+
+[node name="RetryButton" type="Button" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer/ButtonsHBox"]
+custom_minimum_size = Vector2(85, 38)
+layout_mode = 2
+text = "Retry"
+
+[node name="LevelsButton" type="Button" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer/ButtonsHBox"]
+custom_minimum_size = Vector2(85, 38)
+layout_mode = 2
+text = "Levels"
+
+[node name="HomeButton" type="Button" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer/ButtonsHBox"]
+custom_minimum_size = Vector2(85, 38)
+layout_mode = 2
+text = "Home"

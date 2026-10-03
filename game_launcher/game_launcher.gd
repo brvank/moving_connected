@@ -9,6 +9,7 @@ const SignalGateScene = preload(FileNames.SignalGate)
 const FixedDangerZoneScene = preload(FileNames.FixedDangerZone)
 const ShiftingDangerZoneScene = preload(FileNames.ShiftingDangerZone)
 const TimedDangerZoneScene = preload(FileNames.TimedDangerZone)
+const GameDialogsScene = preload(FileNames.GameDialogs)
 
 # Runtime state
 var _players: Array[Node2D] = []
@@ -16,9 +17,21 @@ var _camera: Camera2D
 var _current_camera_index: int = 0
 var _exit_points: Array = []
 var _level_complete: bool = false
+var _game_over: bool = false
+var _dialogs: CanvasLayer
 
 func _ready() -> void:
-	var fileData = FileIO.readFile(FileNames.Level)
+	# Attach dialogs CanvasLayer overlay
+	_dialogs = GameDialogsScene.instantiate()
+	add_child(_dialogs)
+
+	# Fetch level data through GameManager (fallback to FileNames.Level if standalone)
+	var fileData: String = ""
+	if get_node_or_null("/root/GameManager") != null:
+		fileData = GameManager.get_current_level_json_data()
+	else:
+		fileData = FileIO.readFile(FileNames.Level)
+
 	var levelData = LevelDataParser.parseLevelData(fileData)
 
 	if levelData == null:
@@ -35,6 +48,8 @@ func _ready() -> void:
 	_setupDangerZones(levelData)
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _game_over or _level_complete:
+		return
 	if event.is_action_pressed("switch_camera"):
 		_cycle_camera()
 
@@ -46,6 +61,13 @@ func _setupPlayers(levelData: LevelData) -> void:
 		playerInstance.position = playerLoc.position()
 		add_child(playerInstance)
 		_players.append(playerInstance)
+
+func _disable_player_movement() -> void:
+	for player in _players:
+		if is_instance_valid(player):
+			player.set_physics_process(false)
+			if player is CharacterBody2D:
+				player.velocity = Vector2.ZERO
 
 # ── Camera ────────────────────────────────────────────────────────────────────
 
@@ -185,7 +207,7 @@ func _on_exit_state_changed(_exit_point: Area2D, _body: Node2D) -> void:
 	_check_win_condition()
 
 func _check_win_condition() -> void:
-	if _level_complete:
+	if _level_complete or _game_over:
 		return
 	# Win when ALL exit points are occupied by different players (one player per exit)
 	var occupied_by: Array[Node2D] = []
@@ -200,8 +222,19 @@ func _check_win_condition() -> void:
 		_on_level_complete()
 
 func _on_level_complete() -> void:
+	if _level_complete or _game_over:
+		return
 	_level_complete = true
 	print("=== LEVEL COMPLETE! ===")
+	_disable_player_movement()
+	
+	var has_next: bool = false
+	if get_node_or_null("/root/GameManager") != null:
+		var next_info = GameManager.get_next_level_info()
+		has_next = next_info.exists
+	
+	if _dialogs:
+		_dialogs.show_level_complete(has_next)
 
 # ── Signal Gates ──────────────────────────────────────────────────────────────
 
@@ -242,7 +275,10 @@ func _setupDangerZones(levelData: LevelData) -> void:
 		blocks.add_child(tdInstance)
 
 func _on_player_hit_danger(_danger_zone: Area2D, _body: Node2D) -> void:
-	if _level_complete:
+	if _level_complete or _game_over:
 		return
-	print("Player hit a danger zone! Restarting level...")
-	get_tree().reload_current_scene()
+	_game_over = true
+	print("Player hit a danger zone! Showing Game Over dialog...")
+	_disable_player_movement()
+	if _dialogs:
+		_dialogs.show_game_over()

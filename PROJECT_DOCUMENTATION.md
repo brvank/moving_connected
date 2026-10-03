@@ -1,6 +1,6 @@
 # Moving Connected — Project Documentation
 
-Comprehensive technical documentation for **Moving Connected**, a 2D grid/arena multi-character puzzle game developed in Godot 4.
+Comprehensive technical documentation for **Moving Connected**, a 2D multi-avatar navigation puzzle game developed in Godot 4.
 
 ---
 
@@ -13,6 +13,8 @@ Comprehensive technical documentation for **Moving Connected**, a 2D grid/arena 
 - **Level Objective:** Every exit point must be occupied simultaneously by a distinct player (1-to-1 matching) to achieve level completion.
 - **Hazards & Puzzles:** Players must negotiate fixed blocks, shifting blocks, signal gates (pressure switches), and danger zones (static, moving, and timed).
 - **Camera Cycling:** The player can press `Tab` (`switch_camera`) to cycle the camera view across each avatar.
+- **Multi-Level Architecture:** Hierarchical level structure grouped by world (e.g. World 1, World 2), driven by a global `GameManager` singleton.
+- **Game Flow Modals:** In-game popup dialogs for **Game Over** (retry, levels, home) and **Level Complete** (next level, retry, levels, home).
 
 ---
 
@@ -32,19 +34,37 @@ Comprehensive technical documentation for **Moving Connected**, a 2D grid/arena 
 
 ```
 moving-connected/
-├── project.godot                     # Engine settings, main scene, input mapping
+├── project.godot                     # Engine settings, main scene, autoloads, input mapping
 ├── icon.svg                          # Default Godot icon used as player sprite texture
-├── PROJECT_DOCUMENTATION.md          # Comprehensive architecture & developer guide (this file)
+├── PROJECT_DOCUMENTATION.md          # Technical documentation & architecture guide
+│
+├── game_manager/
+│   └── game_manager.gd               # Autoload singleton managing worlds, levels, and scene flows
+│
+├── screens/
+│   ├── main_menu/
+│   │   ├── main_menu.gd              # Homepage logic: Play (-> Level Select) & Exit
+│   │   └── main_menu.tscn            # Homepage UI scene
+│   │
+│   └── level_select/
+│       ├── level_select.gd           # Level selection screen logic
+│       └── level_select.tscn         # World 1 & 2 level selection tiles
 │
 ├── levels_data/
-│   ├── level.json                    # Active level layout data (bounds, players, exits, obstacles)
-│   └── level_data_doc.txt            # Schema explanation and format definitions
+│   ├── level.json                    # Default / fallback level layout
+│   ├── level_data_doc.txt            # Schema explanation and format definitions
+│   ├── world_1/
+│   │   ├── level_1_1.json            # World 1, Level 1 (2 players, basic obstacles)
+│   │   └── level_1_2.json            # World 1, Level 2 (2 players, signal gate + timed hazard)
+│   └── world_2/
+│       ├── level_2_1.json            # World 2, Level 1 (3 players, moving & timed hazards)
+│       └── level_2_2.json            # World 2, Level 2 (3 players, cross-activating signal gates)
 │
 ├── util/
 │   └── file_names.gd                 # Global path constants (FileNames class)
 │
 ├── file_io_manager/
-│   └── file_io.gd                    # Static utility to load files from disk (FileIO class)
+│   └── file_io.gd                    # Static file loader utility (FileIO class)
 │
 ├── game_data_manager/
 │   ├── level_data_parser.gd          # Parses raw JSON into typed LevelData (LevelDataParser class)
@@ -59,12 +79,16 @@ moving-connected/
 │   │   ├── player.gd                 # CharacterBody2D movement controller
 │   │   └── player.tscn               # Reusable player avatar scene
 │   │
+│   ├── ui/
+│   │   ├── game_dialogs.gd           # Modal overlay script (Game Over & Level Complete)
+│   │   └── game_dialogs.tscn         # CanvasLayer UI overlay
+│   │
 │   └── obstacles/
 │       ├── fixed_block/
-│       │   ├── fixed_block.gd        # StaticBody2D static obstacle
+│       │   ├── fixed_block.gd        # Static solid obstacle
 │       │   └── fixed_block.tscn
 │       ├── shifting_block/
-│       │   ├── shifting_block.gd     # StaticBody2D obstacle patrolling on tween
+│       │   ├── shifting_block.gd     # Solid obstacle moving via Tween
 │       │   └── shifting_block.tscn
 │       ├── exit_point/
 │       │   ├── exit_point.gd         # Area2D goal with occupancy detection & color swap
@@ -73,15 +97,15 @@ moving-connected/
 │       │   ├── signal_gate.gd        # Node2D managing StaticBody2D gate + Area2D switch
 │       │   └── signal_gate.tscn
 │       └── danger_zone/
-│           ├── fixed_danger_zone.gd    # Area2D static hazard (reloads scene on contact)
+│           ├── fixed_danger_zone.gd    # Static lethal area (triggers Game Over)
 │           ├── fixed_danger_zone.tscn
-│           ├── shifting_danger_zone.gd # Area2D patrolling hazard
+│           ├── shifting_danger_zone.gd # Patrolling lethal area
 │           ├── shifting_danger_zone.tscn
-│           ├── timed_danger_zone.gd    # Area2D pulsing on/off hazard
+│           ├── timed_danger_zone.gd    # Pulsing on/off lethal area
 │           └── timed_danger_zone.tscn
 │
 ├── prototype/
-│   ├── prototype.tscn                # Main run scene (contains GameLauncher, Line2D, Env)
+│   ├── prototype.tscn                # Gameplay scene (GameLauncher, Line2D, Env)
 │   └── line_2d.gd                    # Connects all active player nodes dynamically
 │
 └── game_launcher/
@@ -90,22 +114,22 @@ moving-connected/
 
 ---
 
-## 4. Level Data Schema (`level.json`)
+## 4. Level Data Schema (`levels_data/world_X/level_X_Y.json`)
 
 Levels are authored in standard JSON loaded at runtime:
 
 ```json
 {
   "w": [[0, 0], [1000, 600]],
-  "p": [[800, 400], [800, 500]],
-  "e": [[900, 400], [900, 500]],
+  "p": [[200, 250], [200, 450]],
+  "e": [[850, 200], [850, 450]],
   "o": {
-    "fb": [[100, 50], [300, 100]],
-    "sb": [[200, 100, 0], [150, 200, 1]],
-    "sg": [[500, 100, 450, 100], [600, 300, 550, 300]],
-    "fd": [[200, 500], [400, 300]],
-    "sd": [[400, 400, 0], [600, 400, 1]],
-    "td": [[600, 200], [600, 100]]
+    "fb": [[400, 250], [400, 400], [600, 200], [600, 450]],
+    "sb": [[500, 320, 0]],
+    "sg": [[700, 300, 300, 450]],
+    "fd": [],
+    "sd": [],
+    "td": [[500, 320]]
   }
 }
 ```
@@ -130,83 +154,65 @@ Levels are authored in standard JSON loaded at runtime:
 
 ## 5. Architectural Components & Mechanics
 
-### 5.1 Game Launcher (`game_launcher/game_launcher.gd`)
-Attached to the root node of `prototype.tscn`. Performs level initialization and game-loop monitoring:
-1. **Reads JSON:** Loads file via `FileIO.readFile(FileNames.Level)` and parses via `LevelDataParser.parseLevelData(...)`.
-2. **Walls Construction (`_setupWalls`):**
-   - Generates four perimeter boundaries (Top, Bottom, Left, Right) as `Sprite2D` + `CollisionShape2D` added to `$Env/Walls`.
-   - Centers each wall taking bounding origin offsets into account (`left + (right - left) / 2`, etc.).
-3. **Player Spawning (`_setupPlayers`):**
-   - Instantiates `PlayerScene` for every point in `levelData.playersLocations`.
-   - Stores avatars in `_players: Array[Node2D]`. *(Invariant typing requirement: `Array[Node2D]` is required to pass to `Line2D.set_tracked_nodes`)*.
-4. **Camera Setup (`_setupCamera`):**
-   - Dynamically creates a `Camera2D` with physics process callback and position smoothing enabled.
-   - Constrains camera movement to the arena boundaries (`limit_left`, `limit_top`, `limit_right`, `limit_bottom`).
-   - Attaches the camera as a child of the first player (`_players[0]`).
-5. **Camera Cycling (`_cycle_camera`):**
-   - Listens to `_unhandled_input` for `switch_camera` (mapped to `Tab`).
-   - Reparents the camera to `_players[_current_camera_index]` and resets local position to `Vector2.ZERO`.
-6. **Connecting Line (`_setupLine`):**
-   - Passes `_players` to `$Line2D`.
-7. **Win Condition (`_check_win_condition`):**
-   - Iterates through all instantiated exit points.
-   - Collects unique player occupants across all exits (`get_occupants()`).
-   - If each exit has an occupant and `occupied_by.size() >= _exit_points.size()`, triggers `_on_level_complete()`.
-8. **Loss Condition (`_on_player_hit_danger`):**
-   - Triggered when any avatar enters a danger zone.
-   - Prints failure log and calls `get_tree().reload_current_scene()`.
+### 5.1 Game Manager (`game_manager/game_manager.gd`)
+Registered as an Autoload singleton (`GameManager`):
+- Tracks `current_world` and `current_level`.
+- Resolves level file paths dynamically: `res://levels_data/world_%d/level_%d_%d.json`.
+- `load_level(world, level)`: Transitions to `prototype.tscn` to play the selected level.
+- `restart_current_level()`: Reloads the active level.
+- `get_next_level_info()`: Checks if next level exists in current world or next world.
+- `load_next_level()`: Seamlessly transitions to the next available level.
+- Navigation helpers: `go_to_level_select()`, `go_to_main_menu()`.
 
-### 5.2 Player (`game_components/player/`)
-- Root is a `CharacterBody2D` with `RectangleShape2D` (32×32) and scaled `Sprite2D`.
-- Velocity is calculated from `Input.get_axis("ui_left", "ui_right")` and `Input.get_axis("ui_up", "ui_down")` normalized and multiplied by `SPEED = 300.0`.
-- Moves using `move_and_slide()` (delta is handled internally by Godot).
+### 5.2 Game Launcher (`game_launcher/game_launcher.gd`)
+Root orchestrator of gameplay inside `prototype.tscn`:
+1. **Reads JSON:** Fetches data via `GameManager.get_current_level_json_data()`.
+2. **Dialogs Overlay:** Instantiates `GameDialogs` as a `CanvasLayer` (layer 10) so modals remain fixed on screen.
+3. **Walls Construction:** Generates 4 boundary walls sized and positioned to `levelData.windowSize`.
+4. **Player Spawning:** Dynamically instantiates $N$ player scenes based on `"p"`.
+5. **Camera Setup & Cycling:** Attaches `Camera2D` to player 1, sets limits to arena bounds, and cycles focus between players upon pressing `Tab`.
+6. **Connecting Line:** Binds all player nodes to `Line2D` to draw the enclosing polygon.
+7. **Win Condition:** Verifies all exit points are occupied by unique players. On completion, disables player movement and presents the Level Complete dialog.
+8. **Loss Condition:** On contact with any danger zone, disables player movement and presents the Game Over dialog.
 
-### 5.3 Connecting Line (`prototype/line_2d.gd`)
-- Tracks dynamic array of `Node2D` nodes passed to `set_tracked_nodes(...)`.
-- Clears points and allocates one vertex per player.
-- During `_process`, updates local point coordinates using `to_local(node.global_position)`.
-- With `closed = true` on the `Line2D` scene, renders a closed polygon connecting all avatars.
+### 5.3 UI & Screen Flows
+- **Homepage (`screens/main_menu/`):**
+  - "Play" button -> transitions to Level Select screen.
+  - "Exit" button -> quits application.
+- **Level Select (`screens/level_select/`):**
+  - Grouped by World 1 and World 2.
+  - Clicking any level tile passes world and level number to `GameManager.load_level(world, level)`.
+  - "< Back" button returns to Homepage.
+- **In-Game Modals (`game_components/ui/game_dialogs.tscn`):**
+  - **Game Over Dialog:** "Retry" (restarts level), "Levels" (level select), "Home" (main menu).
+  - **Level Complete Dialog:** "Next Level" (loads next stage), "Retry", "Levels", "Home".
 
-### 5.4 Exit Points (`game_components/obstacles/exit_point/`)
-- `Area2D` with 50×50 dimension.
-- Maintains `_occupants: Array[Node2D]` updated via `body_entered` and `body_exited`.
-- **Visual Feedback:**
-  - Unoccupied: Semi-transparent green `Color(0.0, 1.0, 0.2, 0.8)`.
-  - Occupied: Solid yellow `Color(1.0, 0.9, 0.0, 1.0)`.
-
-### 5.5 Signal Gates (`game_components/obstacles/signal_gate/`)
-- Root is `Node2D` which dynamically instantiates two sub-elements:
-  1. **Gate Block (`StaticBody2D`):** Located at `block_position`. Size 20×50.
-     - Closed: Solid purple `Color(0.5, 0.0, 1.0, 1.0)`, collision active.
-     - Open: Translucent purple `Color(0.5, 0.0, 1.0, 0.25)`, collision shape disabled via `set_deferred("disabled", true)`.
-  2. **Switch (`Area2D`):** Located at `switch_position`. Size 20×20.
-     - Green texture `Color(0.0, 0.8, 0.4, 0.8)`.
-     - Detects player entry/exit. When 1 or more players stand on the switch, the gate opens; when vacated, it closes.
-
-### 5.6 Danger Zones (`game_components/obstacles/danger_zone/`)
-- Red hazards (`Color(1.0, 0.0, 0.0, 0.7)`).
-- **Fixed Danger Zone:** Static `Area2D`.
-- **Shifting Danger Zone:** `Area2D` patrolling `movementDistance = 100.0` px back-and-forth along the configured axis using looping tweens.
-- **Timed Danger Zone:** `Area2D` alternating between active (monitored, solid red) and inactive (unmonitored, 15% opacity red) every 2.0 seconds via coroutine.
+### 5.4 Game Components Reference
+- **Player (`game_components/player/`):** `CharacterBody2D` (32×32) moving with normalized direction * 300.0 px/s.
+- **Line2D (`prototype/line_2d.gd`):** Dynamic polygon connecting all active avatars.
+- **Exit Points (`game_components/obstacles/exit_point/`):**
+  - Size: 50×50 px.
+  - Green when unoccupied, turns bright yellow upon player entry.
+- **Signal Gate (`game_components/obstacles/signal_gate/`):**
+  - Gate block (20×50, solid purple).
+  - Remote switch (20×20, green). Stepping on the switch opens the gate (disables collision).
+- **Danger Zones (`game_components/obstacles/danger_zone/`):**
+  - Red hazards triggering Game Over on player collision.
+  - Fixed, shifting (tween patrol), and timed (2s active / 2s inactive cycle).
 
 ---
 
 ## 6. Developer Guidelines for Future Extensions
 
-### Adding New Levels / Multi-Level Loading
-1. Create new JSON files in `res://levels_data/` (e.g. `level_01.json`, `level_02.json`).
-2. Add corresponding path constants to `util/file_names.gd`.
-3. In `game_launcher.gd`, replace hardcoded `FileNames.Level` with a level manager variable or argument (e.g. `current_level_path`).
-4. On `_on_level_complete()`, load the next level file or transit to a victory screen.
+### Adding New Worlds and Levels
+1. Create a new folder under `res://levels_data/world_X/`.
+2. Add JSON files matching the pattern `level_X_Y.json` (e.g. `level_3_1.json`).
+3. Add a corresponding button in `screens/level_select/level_select.tscn` connecting to `_on_level_selected(X, Y)`.
+4. `GameManager.get_next_level_info()` will automatically detect and link levels across worlds.
 
-### Creating New Obstacle Types
-1. **Scene & Script:** Place under `res://game_components/obstacles/<new_type>/`.
-2. **Resource Path:** Register in `util/file_names.gd` under `FileNames`.
-3. **Data Model:** Update `LevelData` (`game_data_manager/sub_classes/level_data.gd`) with a typed array.
-4. **Parser:** Add parser extraction in `game_data_manager/level_data_parser.gd`.
-5. **Launcher:** Add instantiation loop in `game_launcher.gd`.
-
-### GDScript Type Invariance Notice
-In GDScript, typed arrays are invariant:
-- `Array[CharacterBody2D]` **cannot** be passed to a function expecting `Array[Node2D]`, even though `CharacterBody2D` inherits from `Node2D`.
-- Always store polymorphic node lists as `Array[Node2D]` if they are shared across modules (e.g. `_players` in `game_launcher.gd`).
+### Adding New Obstacles
+1. Create scene and script under `res://game_components/obstacles/<new_obstacle>/`.
+2. Register path in `util/file_names.gd`.
+3. Add data class or array in `game_data_manager/sub_classes/level_data.gd`.
+4. Parse in `game_data_manager/level_data_parser.gd`.
+5. Spawn in `game_launcher/game_launcher.gd`.
