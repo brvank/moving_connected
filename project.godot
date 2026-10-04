@@ -24,6 +24,11 @@ GameManager="*res://game_manager/game_manager.gd"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+pointing/emulate_mouse_from_touch=true
+
 [input]
 
 switch_camera={

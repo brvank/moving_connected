@@ -10,6 +10,7 @@ const FixedDangerZoneScene = preload(FileNames.FixedDangerZone)
 const ShiftingDangerZoneScene = preload(FileNames.ShiftingDangerZone)
 const TimedDangerZoneScene = preload(FileNames.TimedDangerZone)
 const GameDialogsScene = preload(FileNames.GameDialogs)
+const TouchControlsScene = preload(FileNames.TouchControls)
 
 # Runtime state
 var _players: Array[Node2D] = []
@@ -24,6 +25,10 @@ func _ready() -> void:
 	# Attach dialogs CanvasLayer overlay
 	_dialogs = GameDialogsScene.instantiate()
 	add_child(_dialogs)
+
+	# Attach touch controls overlay (auto-hides on non-touch devices)
+	var touch_controls = TouchControlsScene.instantiate()
+	add_child(touch_controls)
 
 	# Fetch level data through GameManager (fallback to FileNames.Level if standalone)
 	var fileData: String = ""

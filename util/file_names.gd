@@ -10,5 +10,6 @@ const FixedDangerZone = "res://game_components/obstacles/danger_zone/fixed_dange
 const ShiftingDangerZone = "res://game_components/obstacles/danger_zone/shifting_danger_zone.tscn"
 const TimedDangerZone = "res://game_components/obstacles/danger_zone/timed_danger_zone.tscn"
 const GameDialogs = "res://game_components/ui/game_dialogs.tscn"
+const TouchControls = "res://game_components/ui/touch_controls.tscn"
 const MainMenu = "res://screens/main_menu/main_menu.tscn"
 const LevelSelect = "res://screens/level_select/level_select.tscn"
