@@ -40,12 +40,14 @@ func get_next_level_info() -> Dictionary:
 
 # Loads a specific world and level
 func load_level(world: int, level: int) -> void:
+	get_tree().paused = false
 	current_world = world
 	current_level = level
 	get_tree().change_scene_to_file(PROTOTYPE_SCENE)
 
 # Restarts the currently active level
 func restart_current_level() -> void:
+	get_tree().paused = false
 	get_tree().change_scene_to_file(PROTOTYPE_SCENE)
 
 # Loads the next level if one exists
@@ -58,8 +60,11 @@ func load_next_level() -> void:
 
 # Navigates to the level select screen
 func go_to_level_select() -> void:
+	get_tree().paused = false
 	get_tree().change_scene_to_file(LEVEL_SELECT_SCENE)
 
 # Navigates to the main menu screen
 func go_to_main_menu() -> void:
+	get_tree().paused = false
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+
