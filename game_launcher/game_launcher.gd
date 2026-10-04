@@ -12,6 +12,9 @@ const TimedDangerZoneScene = preload(FileNames.TimedDangerZone)
 const GameDialogsScene = preload(FileNames.GameDialogs)
 const TouchControlsScene = preload(FileNames.TouchControls)
 
+# Active player highlight color (light cyan tint)
+const ACTIVE_PLAYER_TINT = Color(0.4, 0.9, 1.0, 1.0)
+
 # Runtime state
 var _players: Array[Node2D] = []
 var _camera: Camera2D
@@ -93,6 +96,7 @@ func _setupCamera(levelData: LevelData) -> void:
 
 	_current_camera_index = 0
 	_players[0].add_child(_camera)
+	_highlight_active_player()
 
 func _cycle_camera() -> void:
 	if _players.size() <= 1:
@@ -100,6 +104,14 @@ func _cycle_camera() -> void:
 	_current_camera_index = (_current_camera_index + 1) % _players.size()
 	_camera.reparent(_players[_current_camera_index])
 	_camera.position = Vector2.ZERO
+	_highlight_active_player()
+
+func _highlight_active_player() -> void:
+	for i in _players.size():
+		if i == _current_camera_index:
+			_players[i].modulate = ACTIVE_PLAYER_TINT
+		else:
+			_players[i].modulate = Color.WHITE
 
 # ── Line ──────────────────────────────────────────────────────────────────────
 
