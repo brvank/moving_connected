@@ -158,10 +158,19 @@ Levels are authored in standard JSON loaded at runtime:
 Registered as an Autoload singleton (`GameManager`):
 - Tracks `current_world` and `current_level`.
 - Resolves level file paths dynamically: `res://levels_data/world_%d/level_%d_%d.json`.
-- `load_level(world, level)`: Transitions to `prototype.tscn` to play the selected level.
+- **Persistent Disk Saving (`user://save_data.json`):**
+  - Targets Android internal storage sandbox (`user://`) without requiring additional Android storage permissions.
+  - Automatically loads on launch via `load_progress()` in `_ready()`.
+  - Persists `_completed_levels` and `_unlocked_levels` to disk immediately upon level completion via `complete_level()`.
+  - Includes self-healing integrity check on load to guarantee unlocked progression consistency.
+- **Progression Locking:**
+  - `is_level_unlocked(world, level)`: Verifies whether a stage is accessible. Higher levels cannot be played until previous levels are completed.
+  - `is_world_unlocked(world)`: World $W > 1$ remains locked until the final level of World $W-1$ is completed and Level $(W, 1)$ is unlocked.
+  - `load_level(world, level)`: Enforces level unlock check; prevents unauthorized level access.
+- `load_level(world, level)`: Transitions to `prototype.tscn` to play the selected level if unlocked.
 - `restart_current_level()`: Reloads the active level.
-- `get_next_level_info()`: Checks if next level exists in current world or next world.
-- `load_next_level()`: Seamlessly transitions to the next available level.
+- `get_next_level_info()` / `get_next_level_for(world, level)`: Checks if next level exists in current world or next world.
+- `load_next_level()`: Seamlessly transitions to the next available unlocked level.
 - Navigation helpers: `go_to_level_select()`, `go_to_main_menu()`.
 
 ### 5.2 Game Launcher (`game_launcher/game_launcher.gd`)

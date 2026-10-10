@@ -245,6 +245,9 @@ func _on_level_complete() -> void:
 	print("=== LEVEL COMPLETE! ===")
 	_disable_player_movement()
 	
+	if get_node_or_null("/root/GameManager") != null:
+		GameManager.complete_level(GameManager.current_world, GameManager.current_level)
+	
 	var has_next: bool = false
 	if get_node_or_null("/root/GameManager") != null:
 		var next_info = GameManager.get_next_level_info()
