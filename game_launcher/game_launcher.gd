@@ -74,6 +74,8 @@ func _disable_player_movement() -> void:
 	for player in _players:
 		if is_instance_valid(player):
 			player.set_physics_process(false)
+			if "extra_velocity" in player:
+				player.extra_velocity = Vector2.ZERO
 			if player is CharacterBody2D:
 				player.velocity = Vector2.ZERO
 

@@ -3,18 +3,41 @@
 [ext_resource type="Script" path="res://game_components/ui/touch_controls.gd" id="1_touch"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
-bg_color = Color(0.2, 0.2, 0.3, 0.55)
+bg_color = Color(0.18, 0.22, 0.32, 0.7)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
-bg_color = Color(0.35, 0.35, 0.5, 0.75)
+bg_color = Color(0.3, 0.45, 0.7, 0.85)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.1, 0.12, 0.18, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_active"]
+bg_color = Color(0.25, 0.45, 0.8, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_inactive"]
+bg_color = Color(0.15, 0.18, 0.25, 0.6)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="TouchControls" type="CanvasLayer"]
 layer = 9
@@ -30,68 +53,250 @@ mouse_filter = 2
 
 [node name="BtnUp" type="Button" parent="DPad"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 70)
+custom_minimum_size = Vector2(65, 65)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 90.0
-offset_top = -230.0
-offset_right = 160.0
-offset_bottom = -160.0
+offset_left = 80.0
+offset_top = -215.0
+offset_right = 145.0
+offset_bottom = -150.0
 theme_override_colors/font_color = Color(1, 1, 1, 0.9)
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 text = "▲"
 
 [node name="BtnLeft" type="Button" parent="DPad"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 70)
+custom_minimum_size = Vector2(65, 65)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 10.0
-offset_top = -150.0
-offset_right = 80.0
+offset_top = -145.0
+offset_right = 75.0
 offset_bottom = -80.0
 theme_override_colors/font_color = Color(1, 1, 1, 0.9)
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 text = "◀"
 
 [node name="BtnRight" type="Button" parent="DPad"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 70)
+custom_minimum_size = Vector2(65, 65)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 170.0
-offset_top = -150.0
-offset_right = 240.0
+offset_left = 150.0
+offset_top = -145.0
+offset_right = 215.0
 offset_bottom = -80.0
 theme_override_colors/font_color = Color(1, 1, 1, 0.9)
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 text = "▶"
 
 [node name="BtnDown" type="Button" parent="DPad"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 70)
+custom_minimum_size = Vector2(65, 65)
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 90.0
-offset_top = -70.0
-offset_right = 160.0
-offset_bottom = 0.0
+offset_left = 80.0
+offset_top = -75.0
+offset_right = 145.0
+offset_bottom = -10.0
 theme_override_colors/font_color = Color(1, 1, 1, 0.9)
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 text = "▼"
+
+[node name="AwardedControls" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -310.0
+offset_top = -185.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="AwardedControls"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TabBar" type="HBoxContainer" parent="AwardedControls/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="TabSep" type="Button" parent="AwardedControls/VBox/TabBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 32)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_tab_active")
+text = "⇄ Sep"
+
+[node name="TabRot" type="Button" parent="AwardedControls/VBox/TabBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 32)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_tab_inactive")
+text = "↻ Rot"
+
+[node name="TabSize" type="Button" parent="AwardedControls/VBox/TabBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 32)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_tab_inactive")
+text = "⇱ Size"
+
+[node name="ContentContainer" type="Control" parent="AwardedControls/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SepPanel" type="VBoxContainer" parent="AwardedControls/VBox/ContentContainer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+
+[node name="BtnSepSwitch" type="Button" parent="AwardedControls/VBox/ContentContainer/SepPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+text = "Mode: Close ⇥⇤"
+
+[node name="SepButtonsHBox" type="HBoxContainer" parent="AwardedControls/VBox/ContentContainer/SepPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="BtnSepH" type="Button" parent="AwardedControls/VBox/ContentContainer/SepPanel/SepButtonsHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+text = "⇄ Horiz"
+
+[node name="BtnSepV" type="Button" parent="AwardedControls/VBox/ContentContainer/SepPanel/SepButtonsHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+text = "⇅ Vert"
+
+[node name="RotPanel" type="HBoxContainer" parent="AwardedControls/VBox/ContentContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="BtnRotCW" type="Button" parent="AwardedControls/VBox/ContentContainer/RotPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+text = "↻ Clockwise"
+
+[node name="BtnRotCCW" type="Button" parent="AwardedControls/VBox/ContentContainer/RotPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+text = "↺ Counter-CW"
+
+[node name="SizePanel" type="VBoxContainer" parent="AwardedControls/VBox/ContentContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 4
+
+[node name="ScaleLabel" type="Label" parent="AwardedControls/VBox/ContentContainer/SizePanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Player Size: 1.0x"
+horizontal_alignment = 1
+
+[node name="SizeButtonsHBox" type="HBoxContainer" parent="AwardedControls/VBox/ContentContainer/SizePanel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="BtnScaleDown" type="Button" parent="AwardedControls/VBox/ContentContainer/SizePanel/SizeButtonsHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+text = "－ 0.5x"
+
+[node name="BtnScaleReset" type="Button" parent="AwardedControls/VBox/ContentContainer/SizePanel/SizeButtonsHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+text = "↺ Reset"
+
+[node name="BtnScaleUp" type="Button" parent="AwardedControls/VBox/ContentContainer/SizePanel/SizeButtonsHBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+text = "＋ 2.0x"

@@ -66,6 +66,19 @@ func is_world_unlocked(world: int) -> bool:
 	# A world is unlocked if its first level is unlocked
 	return is_level_unlocked(world, 1)
 
+# ── Awarded Controls Unlocks ──────────────────────────────────────────────────
+# 1st control (Separators): awarded after completing World 1 levels 1-8
+func has_separators_unlocked() -> bool:
+	return is_level_completed(1, 8) or is_world_unlocked(2) or is_world_unlocked(3)
+
+# 2nd control (Circular): awarded after completing all levels of World 1 (level 1-11)
+func has_circular_unlocked() -> bool:
+	return is_level_completed(1, 11) or is_world_unlocked(2) or is_world_unlocked(3)
+
+# 3rd control (Size Changer): awarded after completing World 2 levels 1-8
+func has_size_changer_unlocked() -> bool:
+	return is_level_completed(2, 8) or is_world_unlocked(3)
+
 func complete_level(world: int, level: int) -> void:
 	var key = "%d_%d" % [world, level]
 	if not _completed_levels.has(key):
