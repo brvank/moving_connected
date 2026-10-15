@@ -119,18 +119,27 @@ func _on_home_pressed() -> void:
 	home_pressed.emit()
 	var gm = _get_game_manager()
 	if gm:
-		gm.go_to_main_menu()
+		if gm.is_testing_custom_level:
+			gm.go_to_level_editor()
+		else:
+			gm.go_to_main_menu()
 
 func _on_next_level_pressed() -> void:
 	get_tree().paused = false
 	next_level_pressed.emit()
 	var gm = _get_game_manager()
 	if gm:
-		gm.load_next_level()
+		if gm.is_testing_custom_level:
+			gm.go_to_level_editor()
+		else:
+			gm.load_next_level()
 
 func _on_level_select_pressed() -> void:
 	get_tree().paused = false
 	level_select_pressed.emit()
 	var gm = _get_game_manager()
 	if gm:
-		gm.go_to_level_select()
+		if gm.is_testing_custom_level:
+			gm.go_to_level_editor()
+		else:
+			gm.go_to_level_select()

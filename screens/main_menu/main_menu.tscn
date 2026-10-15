@@ -92,6 +92,17 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 text = "Play"
 
+[node name="EditorButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsVBox" unique_id=1975955507]
+custom_minimum_size = Vector2(220, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.7, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_button")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+text = "Level Editor"
+
 [node name="ExitButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsVBox" unique_id=400731175]
 custom_minimum_size = Vector2(220, 48)
 layout_mode = 2

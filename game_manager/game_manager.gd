@@ -6,6 +6,11 @@ var current_level: int = 1
 const PROTOTYPE_SCENE: String = "res://prototype/prototype.tscn"
 const MAIN_MENU_SCENE: String = "res://screens/main_menu/main_menu.tscn"
 const LEVEL_SELECT_SCENE: String = "res://screens/level_select/level_select.tscn"
+const LEVEL_EDITOR_SCENE: String = "res://screens/level_editor/level_editor.tscn"
+
+# Custom level testing state
+var is_testing_custom_level: bool = false
+var custom_level_json: String = ""
 
 # Progress state
 var _completed_levels: Array[String] = []
@@ -25,6 +30,8 @@ func has_level(world: int, level: int) -> bool:
 
 # Reads and returns the JSON string content for the current active level
 func get_current_level_json_data() -> String:
+	if is_testing_custom_level and not custom_level_json.is_empty():
+		return custom_level_json
 	var path = get_level_path(current_world, current_level)
 	if FileAccess.file_exists(path):
 		return FileIO.readFile(path)
@@ -67,6 +74,9 @@ func is_world_unlocked(world: int) -> bool:
 	return is_level_unlocked(world, 1)
 
 func complete_level(world: int, level: int) -> void:
+	if is_testing_custom_level:
+		print("GameManager: Custom test level completed!")
+		return
 	var key = "%d_%d" % [world, level]
 	if not _completed_levels.has(key):
 		_completed_levels.append(key)
@@ -181,8 +191,21 @@ func go_to_level_select() -> void:
 	get_tree().paused = false
 	get_tree().change_scene_to_file(LEVEL_SELECT_SCENE)
 
+# Starts testing a custom level from level editor
+func test_custom_level(json_data: String) -> void:
+	custom_level_json = json_data
+	is_testing_custom_level = true
+	get_tree().paused = false
+	get_tree().change_scene_to_file(PROTOTYPE_SCENE)
+
+# Navigates to the level editor screen
+func go_to_level_editor() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file(LEVEL_EDITOR_SCENE)
+
 # Navigates to the main menu screen
 func go_to_main_menu() -> void:
+	is_testing_custom_level = false
 	get_tree().paused = false
 	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
 

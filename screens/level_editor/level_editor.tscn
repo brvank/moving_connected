@@ -1,0 +1,386 @@
+[gd_scene format=3 uid="uid://c6f2e8v0w1a7b"]
+
+[ext_resource type="Script" uid="uid://wbhemsr3kan1" path="res://screens/level_editor/level_editor.gd" id="1_editor"]
+[ext_resource type="Script" uid="uid://cxqii465ca688" path="res://screens/level_editor/level_editor_workspace.gd" id="2_workspace"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.08, 0.08, 0.12, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.12, 0.13, 0.19, 0.95)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(0.2, 0.22, 0.32, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(0.3, 0.35, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_danger"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(0.55, 0.18, 0.18, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_success"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(0.15, 0.45, 0.25, 0.95)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_play"]
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+bg_color = Color(0.18, 0.38, 0.72, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_workspace_panel"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.06, 0.06, 0.09, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.22, 0.32, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="LevelEditor" type="Control" unique_id=28330237]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_editor")
+
+[node name="Background" type="Panel" parent="." unique_id=742874957]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="." unique_id=680020029]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offsets = PackedInt32Array(270)
+split_offset = 270
+
+[node name="ToolPanel" type="PanelContainer" parent="HSplitContainer" unique_id=1913441624]
+custom_minimum_size = Vector2(270, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer/ToolPanel" unique_id=1871405500]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="ToolsList" type="VBoxContainer" parent="HSplitContainer/ToolPanel/ScrollContainer" unique_id=1962469664]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1365158382]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.6, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "LEVEL DESIGNER"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=2145642853]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.72, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "Design & Play Levels"
+horizontal_alignment = 1
+
+[node name="Sep1" type="HSeparator" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=403770830]
+layout_mode = 2
+
+[node name="BoundaryHeader" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1582096315]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Level Boundary"
+
+[node name="WBox" type="HBoxContainer" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=910840132]
+layout_mode = 2
+
+[node name="WLabel" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/WBox" unique_id=68232143]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Width:"
+
+[node name="BoundaryWidthSpin" type="SpinBox" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/WBox" unique_id=950047143]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 100.0
+max_value = 3000.0
+step = 50.0
+value = 1000.0
+
+[node name="HBox" type="HBoxContainer" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=2127459123]
+layout_mode = 2
+
+[node name="HLabel" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/HBox" unique_id=1704895091]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "Height:"
+
+[node name="BoundaryHeightSpin" type="SpinBox" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/HBox" unique_id=106092235]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 100.0
+max_value = 3000.0
+step = 50.0
+value = 600.0
+
+[node name="ApplyBoundaryBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1326001144]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "Set Boundary"
+
+[node name="Sep2" type="HSeparator" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=864757983]
+layout_mode = 2
+
+[node name="PaletteHeader" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1501320820]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Add Items (Click or Drag)"
+
+[node name="AddPlayerBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=719700148]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "+ Player (Cyan)"
+
+[node name="AddExitBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=793995655]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 1, 0.4, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "+ Exit Point (Green)"
+
+[node name="AddFixedBlockBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1000810903]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.6, 0.1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "+ Fixed Block"
+
+[node name="AddShiftingBlockBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1023311799]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.75, 0.3, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "+ Shifting Block"
+
+[node name="AddSignalGateBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=834052058]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.4, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "+ Signal Gate (Block+Switch)"
+
+[node name="AddFixedDangerBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=850542992]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "+ Fixed Danger"
+
+[node name="AddShiftingDangerBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=388766509]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "+ Shifting Danger"
+
+[node name="AddTimedDangerBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=2004767321]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "+ Timed Danger"
+
+[node name="Sep3" type="HSeparator" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1848610381]
+layout_mode = 2
+
+[node name="SelectedHeader" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1748720988]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Selected Item"
+
+[node name="SelectedInfoLabel" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=563584994]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.72, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "Click or drag an item to place it."
+autowrap_mode = 3
+
+[node name="DirectionContainer" type="HBoxContainer" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=751737354]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="DirLabel" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/DirectionContainer" unique_id=462184528]
+layout_mode = 2
+text = "Dir:"
+
+[node name="DirectionOption" type="OptionButton" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/DirectionContainer" unique_id=1251233942]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DeleteSelectedBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=208855408]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_danger")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "Delete Selected (Del)"
+
+[node name="Sep4" type="HSeparator" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=849357301]
+layout_mode = 2
+
+[node name="ActionsHeader" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=9035896]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Actions"
+
+[node name="ExtractJsonBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1716484668]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_success")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "Extract Level JSON"
+
+[node name="PlayTestBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=388892927]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_play")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "▶ Play & Test Level"
+
+[node name="ClearAllBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=2117590595]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_danger")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "Clear All Items"
+
+[node name="BackBtn" type="Button" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=1963294713]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "← Main Menu"
+
+[node name="WorkspacePanel" type="PanelContainer" parent="HSplitContainer" unique_id=266554929]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_workspace_panel")
+
+[node name="WorkspaceScroll" type="ScrollContainer" parent="HSplitContainer/WorkspacePanel" unique_id=995994789]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Workspace" type="Control" parent="HSplitContainer/WorkspacePanel/WorkspaceScroll" unique_id=1256426532]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(1000, 600)
+layout_mode = 2
+script = ExtResource("2_workspace")
+
+[node name="ItemsContainer" type="Node2D" parent="HSplitContainer/WorkspacePanel/WorkspaceScroll/Workspace" unique_id=1362433147]
