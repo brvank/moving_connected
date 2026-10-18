@@ -40,12 +40,22 @@ static func _createLevelDataObject(dict: Dictionary) -> LevelData:
 static func _extractSinglePointPositions(arr: Array, is_shifting: bool = false) -> Array[SinglePointPosition]:
 	var resultSinglePointPosisions: Array[SinglePointPosition] = []
 	for ele in arr:
-		if ele is Array:
+		if ele is Array and ele.size() >= 2:
+			var pos = _arrayToVector2(ele)
+			var shift_dir: int = 0
+			var w: int = 20
+			var h: int = 50
 			if is_shifting:
-				resultSinglePointPosisions.append(SinglePointPosition.new(_arrayToVector2(ele), ele[2]))
+				if ele.size() >= 3:
+					shift_dir = int(ele[2])
+				if ele.size() >= 5:
+					w = int(ele[3])
+					h = int(ele[4])
 			else:
-				resultSinglePointPosisions.append(SinglePointPosition.new(_arrayToVector2(ele)))
-		pass
+				if ele.size() >= 4:
+					w = int(ele[2])
+					h = int(ele[3])
+			resultSinglePointPosisions.append(SinglePointPosition.new(pos, shift_dir, w, h))
 	return resultSinglePointPosisions
 
 static func _arrayToVector2(arr: Array) -> Vector2:
@@ -57,5 +67,9 @@ static func _extractSignalGatePositions(arr: Array) -> Array[SignalGateData]:
 		if ele is Array and ele.size() >= 4:
 			var block_pos = Vector2(ele[0], ele[1])
 			var switch_pos = Vector2(ele[2], ele[3])
-			result.append(SignalGateData.new(block_pos, switch_pos))
+			var block_w: int = int(ele[4]) if ele.size() >= 8 else 20
+			var block_h: int = int(ele[5]) if ele.size() >= 8 else 50
+			var switch_w: int = int(ele[6]) if ele.size() >= 8 else 20
+			var switch_h: int = int(ele[7]) if ele.size() >= 8 else 20
+			result.append(SignalGateData.new(block_pos, switch_pos, block_w, block_h, switch_w, switch_h))
 	return result

@@ -198,12 +198,16 @@ func _setupBlocks(levelData: LevelData) -> void:
 
 	for fixedBlock in levelData.fixedBlocksLocations:
 		var fbInstance = FixedBlocksScene.instantiate()
+		fbInstance.width = fixedBlock.width
+		fbInstance.height = fixedBlock.height
 		fbInstance.position = fixedBlock.position()
 		blocks.add_child(fbInstance)
 
 	for shiftingBlock in levelData.shiftingBlocksLocations:
 		var sbInstance = ShiftingBlocksScene.instantiate()
 		sbInstance.movementDirection = shiftingBlock.shiftingDirection
+		sbInstance.width = shiftingBlock.width
+		sbInstance.height = shiftingBlock.height
 		sbInstance.position = shiftingBlock.position()
 		blocks.add_child(sbInstance)
 
@@ -265,6 +269,10 @@ func _setupSignalGates(levelData: LevelData) -> void:
 		var sgInstance = SignalGateScene.instantiate()
 		sgInstance.block_position = gateData.block_position
 		sgInstance.switch_position = gateData.switch_position
+		sgInstance.block_width = gateData.block_width
+		sgInstance.block_height = gateData.block_height
+		sgInstance.switch_width = gateData.switch_width
+		sgInstance.switch_height = gateData.switch_height
 		blocks.add_child(sgInstance)
 
 # ── Danger Zones ──────────────────────────────────────────────────────────────
@@ -275,6 +283,8 @@ func _setupDangerZones(levelData: LevelData) -> void:
 	# Fixed danger zones (static red hazards)
 	for fdLoc in levelData.fixedDangerZonesLocations:
 		var fdInstance = FixedDangerZoneScene.instantiate()
+		fdInstance.width = fdLoc.width
+		fdInstance.height = fdLoc.height
 		fdInstance.position = fdLoc.position()
 		fdInstance.player_hit_danger.connect(_on_player_hit_danger)
 		blocks.add_child(fdInstance)
@@ -283,6 +293,8 @@ func _setupDangerZones(levelData: LevelData) -> void:
 	for sdLoc in levelData.shiftingDangerZonesLocations:
 		var sdInstance = ShiftingDangerZoneScene.instantiate()
 		sdInstance.movementDirection = sdLoc.shiftingDirection
+		sdInstance.width = sdLoc.width
+		sdInstance.height = sdLoc.height
 		sdInstance.position = sdLoc.position()
 		sdInstance.player_hit_danger.connect(_on_player_hit_danger)
 		blocks.add_child(sdInstance)
@@ -290,6 +302,8 @@ func _setupDangerZones(levelData: LevelData) -> void:
 	# Timed danger zones (periodically active red hazards)
 	for tdLoc in levelData.timedDangerZonesLocations:
 		var tdInstance = TimedDangerZoneScene.instantiate()
+		tdInstance.width = tdLoc.width
+		tdInstance.height = tdLoc.height
 		tdInstance.position = tdLoc.position()
 		tdInstance.player_hit_danger.connect(_on_player_hit_danger)
 		blocks.add_child(tdInstance)

@@ -69,19 +69,24 @@ func set_boundary(size: Vector2) -> void:
 	for item in placed_items:
 		if item.type == "__removed__":
 			continue
-		item.position = _clamp_to_boundary(item.position, item.type)
+		item.position = _clamp_to_boundary(item.position, item.type, Vector2(item.width, item.height))
 		if item.node and is_instance_valid(item.node):
 			item.node.position = item.position
 	
 	queue_redraw()
 
-func add_item(type: String, pos: Vector2, direction: int = 0, linked_to: int = -1) -> int:
-	var clamped_pos = _clamp_to_boundary(_snap_to_grid(pos), type)
+func add_item(type: String, pos: Vector2, direction: int = 0, linked_to: int = -1, custom_width: int = -1, custom_height: int = -1) -> int:
+	var def_size = ITEM_SIZES.get(type, Vector2(20, 20))
+	var w = custom_width if custom_width > 0 else int(def_size.x)
+	var h = custom_height if custom_height > 0 else int(def_size.y)
+	var clamped_pos = _clamp_to_boundary(_snap_to_grid(pos), type, Vector2(w, h))
 	var item_data: Dictionary = {
 		"type": type,
 		"position": clamped_pos,
 		"direction": direction,
 		"linked_to": linked_to,
+		"width": w,
+		"height": h,
 		"node": null
 	}
 	placed_items.append(item_data)
@@ -149,7 +154,7 @@ func clear_all() -> void:
 func _create_item_visual(index: int) -> void:
 	var item = placed_items[index]
 	var type = item.type
-	var size = ITEM_SIZES.get(type, Vector2(20, 20))
+	var size = Vector2(item.width, item.height)
 	var color = ITEM_COLORS.get(type, Color.WHITE)
 	
 	var container = Node2D.new()
@@ -157,6 +162,7 @@ func _create_item_visual(index: int) -> void:
 	
 	# Visual sprite
 	var sprite = Sprite2D.new()
+	sprite.name = "Sprite"
 	var texture = DrawableTexture2D.new()
 	texture.setup(int(size.x), int(size.y), DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, color)
 	sprite.texture = texture
@@ -164,6 +170,7 @@ func _create_item_visual(index: int) -> void:
 	
 	# Text label
 	var label = Label.new()
+	label.name = "Label"
 	label.text = ITEM_LABELS.get(type, "?")
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -189,6 +196,31 @@ func _create_item_visual(index: int) -> void:
 	items_container.add_child(container)
 	placed_items[index].node = container
 
+func update_item_size(index: int, w: int, h: int) -> void:
+	if index < 0 or index >= placed_items.size():
+		return
+	var item = placed_items[index]
+	item.width = max(10, w)
+	item.height = max(10, h)
+	item.position = _clamp_to_boundary(item.position, item.type, Vector2(item.width, item.height))
+	if item.node and is_instance_valid(item.node):
+		item.node.position = item.position
+		var sprite = item.node.get_node_or_null("Sprite") as Sprite2D
+		if sprite:
+			var texture = DrawableTexture2D.new()
+			var color = ITEM_COLORS.get(item.type, Color.WHITE)
+			texture.setup(item.width, item.height, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, color)
+			sprite.texture = texture
+		var label = item.node.get_node_or_null("Label") as Label
+		if label:
+			label.position = Vector2(-item.width / 2.0, -item.height / 2.0)
+			label.size = Vector2(item.width, item.height)
+		var badge = item.node.get_node_or_null("Badge") as Label
+		if badge:
+			badge.position = Vector2(-item.width / 2.0, item.height / 2.0)
+			badge.size = Vector2(item.width, 14)
+	queue_redraw()
+
 func _update_badge(index: int) -> void:
 	if index < 0 or index >= placed_items.size():
 		return
@@ -204,8 +236,8 @@ func _snap_to_grid(pos: Vector2) -> Vector2:
 		snapped(pos.y, GRID_SIZE)
 	)
 
-func _clamp_to_boundary(pos: Vector2, type: String) -> Vector2:
-	var size = ITEM_SIZES.get(type, Vector2(20, 20))
+func _clamp_to_boundary(pos: Vector2, type: String, custom_size: Vector2 = Vector2.ZERO) -> Vector2:
+	var size = custom_size if custom_size != Vector2.ZERO else (ITEM_SIZES.get(type, Vector2(20, 20)))
 	var half = size / 2.0
 	# Account for 20px walls
 	var min_x = half.x + 20.0
@@ -228,7 +260,7 @@ func _find_item_at(pos: Vector2) -> int:
 		var item = placed_items[i]
 		if item.type == "__removed__":
 			continue
-		var size = ITEM_SIZES.get(item.type, Vector2(20, 20))
+		var size = Vector2(item.width, item.height) if item.has("width") and item.has("height") else ITEM_SIZES.get(item.type, Vector2(20, 20))
 		var half = size / 2.0
 		var rect = Rect2(item.position - half, size)
 		# Slightly expand hit area for easy grabbing
@@ -287,7 +319,7 @@ func _gui_input(event: InputEvent) -> void:
 			var item = placed_items[_selected_index]
 			var new_pos = motion_event.position + _drag_offset
 			new_pos = _snap_to_grid(new_pos)
-			new_pos = _clamp_to_boundary(new_pos, item.type)
+			new_pos = _clamp_to_boundary(new_pos, item.type, Vector2(item.width, item.height))
 			item.position = new_pos
 			if item.node and is_instance_valid(item.node):
 				item.node.position = new_pos
@@ -313,7 +345,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				delta.y = GRID_SIZE
 			
 			if delta != Vector2.ZERO:
-				item.position = _clamp_to_boundary(item.position + delta, item.type)
+				item.position = _clamp_to_boundary(item.position + delta, item.type, Vector2(item.width, item.height))
 				if item.node and is_instance_valid(item.node):
 					item.node.position = item.position
 				item_selected.emit(item)
@@ -332,8 +364,8 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 			# Place both block and switch
 			var block_pos = at_position + Vector2(-30, 0)
 			var switch_pos = at_position + Vector2(30, 0)
-			var b_idx = add_item("signal_gate_block", block_pos)
-			var s_idx = add_item("signal_gate_switch", switch_pos, 0, b_idx)
+			var b_idx = add_item("signal_gate_block", block_pos, 0, -1, 20, 50)
+			var s_idx = add_item("signal_gate_switch", switch_pos, 0, b_idx, 20, 20)
 			placed_items[b_idx].linked_to = s_idx
 		else:
 			add_item(type, at_position)
@@ -379,7 +411,7 @@ func _draw() -> void:
 	if _selected_index >= 0 and _selected_index < placed_items.size():
 		var sel = placed_items[_selected_index]
 		if sel.type != "__removed__":
-			var size = ITEM_SIZES.get(sel.type, Vector2(20, 20))
+			var size = Vector2(sel.width, sel.height) if sel.has("width") and sel.has("height") else ITEM_SIZES.get(sel.type, Vector2(20, 20))
 			var half = size / 2.0
 			var sel_rect = Rect2(sel.position - half, size).grow(4.0)
 			draw_rect(sel_rect, Color(1.0, 0.9, 0.2, 0.9), false, 2.0)
@@ -402,26 +434,35 @@ func generate_json() -> String:
 			continue
 		
 		var pos = item.position
+		var w: int = int(item.get("width", 20))
+		var h: int = int(item.get("height", 50))
 		match item.type:
 			"player":
 				players.append([int(pos.x), int(pos.y)])
 			"exit":
 				exits.append([int(pos.x), int(pos.y)])
 			"fixed_block":
-				fixed_blocks.append([int(pos.x), int(pos.y)])
+				fixed_blocks.append([int(pos.x), int(pos.y), w, h])
 			"shifting_block":
-				shifting_blocks.append([int(pos.x), int(pos.y), item.direction])
+				shifting_blocks.append([int(pos.x), int(pos.y), item.direction, w, h])
 			"signal_gate_block":
 				if item.linked_to >= 0 and item.linked_to < placed_items.size():
 					var switch_item = placed_items[item.linked_to]
 					if switch_item.type == "signal_gate_switch":
-						signal_gates.append([int(pos.x), int(pos.y), int(switch_item.position.x), int(switch_item.position.y)])
+						var sw_w: int = int(switch_item.get("width", 20))
+						var sw_h: int = int(switch_item.get("height", 20))
+						signal_gates.append([
+							int(pos.x), int(pos.y),
+							int(switch_item.position.x), int(switch_item.position.y),
+							w, h,
+							sw_w, sw_h
+						])
 			"fixed_danger":
-				fixed_dangers.append([int(pos.x), int(pos.y)])
+				fixed_dangers.append([int(pos.x), int(pos.y), w, h])
 			"shifting_danger":
-				shifting_dangers.append([int(pos.x), int(pos.y), item.direction])
+				shifting_dangers.append([int(pos.x), int(pos.y), item.direction, w, h])
 			"timed_danger":
-				timed_dangers.append([int(pos.x), int(pos.y)])
+				timed_dangers.append([int(pos.x), int(pos.y), w, h])
 	
 	var level_dict: Dictionary = {
 		"w": [[0, 0], [int(_boundary_size.x), int(_boundary_size.y)]],
