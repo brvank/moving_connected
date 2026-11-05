@@ -12,13 +12,17 @@ const TimedDangerZoneScene = preload(FileNames.TimedDangerZone)
 const GameDialogsScene = preload(FileNames.GameDialogs)
 const TouchControlsScene = preload(FileNames.TouchControls)
 
-# Active player highlight color (light cyan tint)
-const ACTIVE_PLAYER_TINT = Color(0.4, 0.9, 1.0, 1.0)
+# Camera: default/closest zoom (never zooms in past this) and the
+# farthest it's allowed to zoom out, plus world-space breathing room kept
+# around the players' bounding box when fitting them both in view.
+const DEFAULT_ZOOM: Vector2 = Vector2(1.0, 1.0)
+const MIN_ZOOM_SCALAR: float = 0.35
+const CAMERA_PADDING: float = 160.0
+const CAMERA_ZOOM_LERP_SPEED: float = 4.0
 
 # Runtime state
 var _players: Array[Node2D] = []
 var _camera: Camera2D
-var _current_camera_index: int = 0
 var _exit_points: Array = []
 var _level_complete: bool = false
 var _game_over: bool = false
@@ -55,11 +59,8 @@ func _ready() -> void:
 	_setupSignalGates(levelData)
 	_setupDangerZones(levelData)
 
-func _unhandled_input(event: InputEvent) -> void:
-	if _game_over or _level_complete:
-		return
-	if event.is_action_pressed("switch_camera"):
-		_cycle_camera()
+func _physics_process(delta: float) -> void:
+	_update_camera(delta)
 
 # ── Players ───────────────────────────────────────────────────────────────────
 
@@ -83,10 +84,10 @@ func _setupCamera(levelData: LevelData) -> void:
 	if _players.is_empty():
 		return
 
-	# Create camera and attach to first player
 	_camera = Camera2D.new()
 	_camera.position_smoothing_enabled = true
 	_camera.process_callback = Camera2D.CAMERA2D_PROCESS_PHYSICS
+	_camera.zoom = DEFAULT_ZOOM
 
 	# Set camera limits from level bounds
 	_camera.limit_left = int(levelData.windowSize.left)
@@ -94,24 +95,55 @@ func _setupCamera(levelData: LevelData) -> void:
 	_camera.limit_right = int(levelData.windowSize.right)
 	_camera.limit_bottom = int(levelData.windowSize.bottom)
 
-	_current_camera_index = 0
-	_players[0].add_child(_camera)
-	_highlight_active_player()
+	add_child(_camera)
+	_camera.make_current()
+	_camera.global_position = _playersCenter()
 
-func _cycle_camera() -> void:
-	if _players.size() <= 1:
+func _playersCenter() -> Vector2:
+	var sum = Vector2.ZERO
+	var count = 0
+	for player in _players:
+		if is_instance_valid(player):
+			sum += player.global_position
+			count += 1
+	if count == 0:
+		return Vector2.ZERO
+	return sum / count
+
+# Keeps both players on screen: recenters on their midpoint every physics
+# frame and zooms out just enough to fit them (with padding), never zooming
+# in past DEFAULT_ZOOM or out past MIN_ZOOM_SCALAR.
+func _update_camera(delta: float) -> void:
+	if _camera == null or _players.is_empty():
 		return
-	_current_camera_index = (_current_camera_index + 1) % _players.size()
-	_camera.reparent(_players[_current_camera_index])
-	_camera.position = Vector2.ZERO
-	_highlight_active_player()
 
-func _highlight_active_player() -> void:
-	for i in _players.size():
-		if i == _current_camera_index:
-			_players[i].modulate = ACTIVE_PLAYER_TINT
-		else:
-			_players[i].modulate = Color.WHITE
+	var min_x = INF
+	var max_x = -INF
+	var min_y = INF
+	var max_y = -INF
+	for player in _players:
+		if not is_instance_valid(player):
+			continue
+		var pos = player.global_position
+		min_x = min(min_x, pos.x)
+		max_x = max(max_x, pos.x)
+		min_y = min(min_y, pos.y)
+		max_y = max(max_y, pos.y)
+
+	if min_x == INF:
+		return
+
+	_camera.global_position = Vector2((min_x + max_x) / 2.0, (min_y + max_y) / 2.0)
+
+	var span_x = (max_x - min_x) + CAMERA_PADDING * 2.0
+	var span_y = (max_y - min_y) + CAMERA_PADDING * 2.0
+	var viewport_size = get_viewport().get_visible_rect().size
+
+	var fit_zoom = min(viewport_size.x / span_x, viewport_size.y / span_y)
+	fit_zoom = clampf(fit_zoom, MIN_ZOOM_SCALAR, DEFAULT_ZOOM.x)
+
+	var target_zoom = Vector2(fit_zoom, fit_zoom)
+	_camera.zoom = _camera.zoom.lerp(target_zoom, clampf(CAMERA_ZOOM_LERP_SPEED * delta, 0.0, 1.0))
 
 # ── Line ──────────────────────────────────────────────────────────────────────
 
