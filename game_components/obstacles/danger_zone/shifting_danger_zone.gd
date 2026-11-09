@@ -18,7 +18,7 @@ func _ready() -> void:
 	texture2d.setup(
 		width, height,
 		DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8,
-		Color(1.0, 0.0, 0.0, 0.7)
+		Color(1.0, 0.08, 0.25, 0.8)
 	)
 	sprite2d.texture = texture2d
 

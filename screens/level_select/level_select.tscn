@@ -3,54 +3,59 @@
 [ext_resource type="Script" path="res://screens/level_select/level_select.gd" id="1_select"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0.08, 0.08, 0.12, 1)
+bg_color = Color(0.02, 0.035, 0.07, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
-bg_color = Color(0.18, 0.2, 0.28, 0.9)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.3, 0.35, 0.5, 0.6)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_hover"]
-bg_color = Color(0.28, 0.32, 0.46, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.55, 0.6, 0.9, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_disabled"]
-bg_color = Color(0.12, 0.13, 0.18, 0.6)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.2, 0.22, 0.3, 0.4)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
-bg_color = Color(0.18, 0.2, 0.28, 0.8)
+bg_color = Color(0.04, 0.07, 0.14, 0.9)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.75, 1, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_hover"]
+bg_color = Color(0, 0.35, 0.6, 0.85)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_disabled"]
+bg_color = Color(0.025, 0.04, 0.08, 0.6)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12, 0.2, 0.3, 0.35)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
 content_margin_left = 16.0
 content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
+bg_color = Color(0.05, 0.09, 0.18, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0.75, 1, 0.6)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="LevelSelect" type="Control"]
 layout_mode = 3
@@ -87,17 +92,18 @@ theme_override_constants/separation = 24
 layout_mode = 2
 
 [node name="BackButton" type="Button" parent="VBoxContainer/TopBar"]
-custom_minimum_size = Vector2(90, 38)
+custom_minimum_size = Vector2(110, 38)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-text = "< Back"
+text = "← TERMINAL"
 
 [node name="TitleLabel" type="Label" parent="VBoxContainer/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.9, 0.92, 1, 1)
+theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 28
-text = "SELECT LEVEL"
+text = "SECTOR DIRECTORY"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="VBoxContainer/TopBar"]

@@ -3,11 +3,11 @@
 [ext_resource type="Script" path="res://game_components/ui/game_dialogs.gd" id="1_dialogs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
-bg_color = Color(0.12, 0.12, 0.16, 0.95)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+bg_color = Color(0.04, 0.07, 0.14, 0.96)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 content_margin_left = 30.0
 content_margin_top = 24.0
 content_margin_right = 30.0
@@ -16,43 +16,43 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.3, 0.3, 0.45, 0.8)
+border_color = Color(0, 0.8, 1, 0.85)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_btn"]
-bg_color = Color(0.15, 0.15, 0.22, 0.8)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+bg_color = Color(0.05, 0.09, 0.18, 0.85)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.35, 0.35, 0.5, 0.85)
+border_color = Color(0, 0.75, 1, 0.6)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_btn_hover"]
-bg_color = Color(0.22, 0.22, 0.32, 0.9)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+bg_color = Color(0, 0.35, 0.6, 0.85)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.5, 0.5, 0.7, 0.95)
+border_color = Color(0.3, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_btn_pressed"]
-bg_color = Color(0.3, 0.3, 0.45, 0.95)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+bg_color = Color(0, 0.45, 0.75, 0.95)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.6, 0.6, 0.85, 1)
+border_color = Color(0.5, 1, 1, 1)
 
 [node name="GameDialogs" type="CanvasLayer"]
 process_mode = 3
@@ -106,16 +106,16 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="Overlay/CenterContainer/PausePanel/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.75, 1, 1)
+theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 28
-text = "PAUSED"
+text = "SYSTEM STASIS"
 horizontal_alignment = 1
 
 [node name="DescLabel" type="Label" parent="Overlay/CenterContainer/PausePanel/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_colors/font_color = Color(0.7, 0.85, 1, 1)
 theme_override_font_sizes/font_size = 15
-text = "Game is paused"
+text = "Quantum tether operations suspended."
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="Overlay/CenterContainer/PausePanel/VBoxContainer"]
@@ -129,25 +129,25 @@ alignment = 1
 [node name="RestartButton" type="Button" parent="Overlay/CenterContainer/PausePanel/VBoxContainer/ButtonsHBox"]
 custom_minimum_size = Vector2(90, 38)
 layout_mode = 2
-text = "Restart"
+text = "Reboot"
 
 [node name="HomeButton" type="Button" parent="Overlay/CenterContainer/PausePanel/VBoxContainer/ButtonsHBox"]
 custom_minimum_size = Vector2(90, 38)
 layout_mode = 2
-text = "Home"
+text = "Abort"
 
 [node name="CancelButton" type="Button" parent="Overlay/CenterContainer/PausePanel/VBoxContainer/ButtonsHBox"]
 custom_minimum_size = Vector2(90, 38)
 layout_mode = 2
-text = "Cancel"
+text = "Resume"
 
 [node name="LevelsButton" type="Button" parent="Overlay/CenterContainer/PausePanel/VBoxContainer/ButtonsHBox"]
 custom_minimum_size = Vector2(90, 38)
 layout_mode = 2
-text = "Levels"
+text = "Sectors"
 
 [node name="GameOverPanel" type="PanelContainer" parent="Overlay/CenterContainer"]
-custom_minimum_size = Vector2(420, 220)
+custom_minimum_size = Vector2(440, 220)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
 
@@ -158,16 +158,16 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
+theme_override_colors/font_color = Color(1, 0.15, 0.25, 1)
 theme_override_font_sizes/font_size = 28
-text = "GAME OVER"
+text = "CONTAINMENT BREACH"
 horizontal_alignment = 1
 
 [node name="DescLabel" type="Label" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_colors/font_color = Color(0.9, 0.8, 0.85, 1)
 theme_override_font_sizes/font_size = 15
-text = "A player touched a hazard zone!"
+text = "Avatar vital systems compromised by lethal hazard."
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer"]
@@ -179,22 +179,22 @@ theme_override_constants/separation = 14
 alignment = 1
 
 [node name="RetryButton" type="Button" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer/ButtonsHBox"]
-custom_minimum_size = Vector2(100, 38)
+custom_minimum_size = Vector2(130, 38)
 layout_mode = 2
-text = "Retry"
+text = "Reboot Chamber"
 
 [node name="LevelsButton" type="Button" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer/ButtonsHBox"]
-custom_minimum_size = Vector2(100, 38)
+custom_minimum_size = Vector2(90, 38)
 layout_mode = 2
-text = "Levels"
+text = "Sectors"
 
 [node name="HomeButton" type="Button" parent="Overlay/CenterContainer/GameOverPanel/VBoxContainer/ButtonsHBox"]
-custom_minimum_size = Vector2(100, 38)
+custom_minimum_size = Vector2(90, 38)
 layout_mode = 2
-text = "Home"
+text = "Abort"
 
 [node name="LevelCompletePanel" type="PanelContainer" parent="Overlay/CenterContainer"]
-custom_minimum_size = Vector2(440, 220)
+custom_minimum_size = Vector2(460, 220)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
 
@@ -205,16 +205,16 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.95, 0.4, 1)
+theme_override_colors/font_color = Color(0, 1, 0.65, 1)
 theme_override_font_sizes/font_size = 28
-text = "LEVEL COMPLETE!"
+text = "EXTRACTION SUCCESSFUL"
 horizontal_alignment = 1
 
 [node name="DescLabel" type="Label" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_colors/font_color = Color(0.7, 0.95, 0.9, 1)
 theme_override_font_sizes/font_size = 15
-text = "All exit portals reached simultaneously!"
+text = "All quantum avatars synchronized at extraction pads."
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer"]
@@ -226,21 +226,21 @@ theme_override_constants/separation = 14
 alignment = 1
 
 [node name="NextLevelButton" type="Button" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer/ButtonsHBox"]
-custom_minimum_size = Vector2(105, 38)
+custom_minimum_size = Vector2(130, 38)
 layout_mode = 2
-text = "Next Level"
+text = "Next Chamber ▶"
 
 [node name="RetryButton" type="Button" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer/ButtonsHBox"]
 custom_minimum_size = Vector2(85, 38)
 layout_mode = 2
-text = "Retry"
+text = "Replay"
 
 [node name="LevelsButton" type="Button" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer/ButtonsHBox"]
 custom_minimum_size = Vector2(85, 38)
 layout_mode = 2
-text = "Levels"
+text = "Sectors"
 
 [node name="HomeButton" type="Button" parent="Overlay/CenterContainer/LevelCompletePanel/VBoxContainer/ButtonsHBox"]
 custom_minimum_size = Vector2(85, 38)
 layout_mode = 2
-text = "Home"
+text = "Abort"

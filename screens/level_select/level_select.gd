@@ -7,10 +7,10 @@ const NUM_WORLDS: int = 4
 const LEVELS_PER_WORLD: int = 10
 
 const WORLD_INFO := [
-	{"title": "World 1 — Blocks", "color": Color(0.5, 0.8, 1, 1), "desc": "Fixed & shifting blocks"},
-	{"title": "World 2 — Danger Zones", "color": Color(1, 0.7, 0.4, 1), "desc": "Fixed & shifting hazards"},
-	{"title": "World 3 — Timed Hazards", "color": Color(1, 0.5, 0.6, 1), "desc": "Timed danger zones"},
-	{"title": "World 4 — Signal Gates", "color": Color(0.7, 0.5, 1, 1), "desc": "Cooperative gates"},
+	{"title": "SECTOR 1 // KINETIC BARRIERS", "color": Color(0.0, 0.85, 1.0, 1), "desc": "Fixed & shifting kinetic bulkheads"},
+	{"title": "SECTOR 2 // RADIATION FIELDS", "color": Color(1.0, 0.6, 0.2, 1), "desc": "Static & mobile plasma hazards"},
+	{"title": "SECTOR 3 // PULSING FLUX", "color": Color(1.0, 0.35, 0.55, 1), "desc": "Timed cyclic radiation zones"},
+	{"title": "SECTOR 4 // QUANTUM PHASE GATES", "color": Color(0.75, 0.45, 1.0, 1), "desc": "Antimatter gates & matrix terminals"},
 ]
 
 var _level_buttons: Dictionary = {}  # "w_l" -> Button
@@ -57,26 +57,26 @@ func _build_ui() -> void:
 
 func _style_card() -> StyleBoxFlat:
 	var s = StyleBoxFlat.new()
-	s.bg_color = Color(0.18, 0.2, 0.28, 0.9)
-	s.set_corner_radius_all(10)
-	s.set_border_width_all(1)
-	s.border_color = Color(0.3, 0.35, 0.5, 0.6)
+	s.bg_color = Color(0.04, 0.07, 0.14, 0.9)
+	s.set_corner_radius_all(6)
+	s.set_border_width_all(2)
+	s.border_color = Color(0.0, 0.75, 1.0, 0.5)
 	return s
 
 func _style_card_hover() -> StyleBoxFlat:
 	var s = StyleBoxFlat.new()
-	s.bg_color = Color(0.28, 0.32, 0.46, 1)
-	s.set_corner_radius_all(10)
+	s.bg_color = Color(0.0, 0.35, 0.6, 0.85)
+	s.set_corner_radius_all(6)
 	s.set_border_width_all(2)
-	s.border_color = Color(0.55, 0.6, 0.9, 1)
+	s.border_color = Color(0.3, 1.0, 1.0, 1.0)
 	return s
 
 func _style_card_disabled() -> StyleBoxFlat:
 	var s = StyleBoxFlat.new()
-	s.bg_color = Color(0.12, 0.13, 0.18, 0.6)
-	s.set_corner_radius_all(10)
+	s.bg_color = Color(0.025, 0.04, 0.08, 0.6)
+	s.set_corner_radius_all(6)
 	s.set_border_width_all(1)
-	s.border_color = Color(0.2, 0.22, 0.3, 0.4)
+	s.border_color = Color(0.12, 0.2, 0.3, 0.35)
 	return s
 
 func _update_ui() -> void:
@@ -91,8 +91,8 @@ func _update_ui() -> void:
 				header.text = info.title
 				header.modulate = Color.WHITE
 			else:
-				header.text = info.title + "  🔒"
-				header.modulate = Color(0.65, 0.65, 0.65, 0.8)
+				header.text = info.title + "  [STASIS 🔒]"
+				header.modulate = Color(0.55, 0.6, 0.7, 0.7)
 
 		for level in range(1, LEVELS_PER_WORLD + 1):
 			var btn: Button = _level_buttons.get("%d_%d" % [world, level])
@@ -100,18 +100,18 @@ func _update_ui() -> void:
 				continue
 			var lvl_unlocked: bool = (gm == null or gm.is_level_unlocked(world, level))
 			var is_completed: bool = (gm != null and gm.is_level_completed(world, level))
-			var title = "Level %d-%d" % [world, level]
+			var title = "Chamber %d-%d" % [world, level]
 
 			btn.disabled = not lvl_unlocked
 			if not lvl_unlocked:
-				btn.text = "%s\n🔒 Locked" % title
-				btn.modulate = Color(0.7, 0.7, 0.7, 0.75)
+				btn.text = "%s\n[LOCKED]" % title
+				btn.modulate = Color(0.6, 0.65, 0.75, 0.65)
 			elif is_completed:
-				btn.text = "%s ✓" % title
-				btn.modulate = Color.WHITE
+				btn.text = "%s\n[SYNCED ✓]" % title
+				btn.modulate = Color(0.3, 1.0, 0.7, 1.0)
 			else:
-				btn.text = title
-				btn.modulate = Color.WHITE
+				btn.text = "%s\n[READY]" % title
+				btn.modulate = Color(0.8, 0.95, 1.0, 1.0)
 
 func _on_level_selected(world: int, level: int) -> void:
 	var gm = get_node_or_null("/root/GameManager")

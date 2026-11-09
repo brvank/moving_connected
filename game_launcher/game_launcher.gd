@@ -20,6 +20,10 @@ const MIN_ZOOM_SCALAR: float = 0.35
 const CAMERA_PADDING: float = 160.0
 const CAMERA_ZOOM_LERP_SPEED: float = 4.0
 
+# Colors - Sci-Fi Cybernetic Palette
+const BORDER_COLOR: Color = Color(0.05, 0.08, 0.16, 1.0)
+const ARENA_BG_COLOR: Color = Color(0.02, 0.035, 0.07, 1.0)
+
 # Runtime state
 var _players: Array[Node2D] = []
 var _camera: Camera2D
@@ -27,8 +31,13 @@ var _exit_points: Array = []
 var _level_complete: bool = false
 var _game_over: bool = false
 var _dialogs: CanvasLayer
+var _previous_clear_color: Color
 
 func _ready() -> void:
+	# Set viewport clear color to match border color for outer letterbox/surround
+	_previous_clear_color = RenderingServer.get_default_clear_color()
+	RenderingServer.set_default_clear_color(BORDER_COLOR)
+
 	# Attach dialogs CanvasLayer overlay
 	_dialogs = GameDialogsScene.instantiate()
 	add_child(_dialogs)
@@ -50,6 +59,7 @@ func _ready() -> void:
 		push_error("Failed to parse level data")
 		return
 
+	_setupBackground(levelData)
 	_setupWalls(levelData)
 	_setupPlayers(levelData)
 	_setupCamera(levelData)
@@ -59,8 +69,24 @@ func _ready() -> void:
 	_setupSignalGates(levelData)
 	_setupDangerZones(levelData)
 
+func _exit_tree() -> void:
+	RenderingServer.set_default_clear_color(_previous_clear_color)
+	if get_node_or_null("/root/SoundManager") != null:
+		SoundManager.set_thruster_active(false)
+
 func _physics_process(delta: float) -> void:
 	_update_camera(delta)
+	_update_thruster_sound()
+
+func _update_thruster_sound() -> void:
+	var is_moving = false
+	if not _game_over and not _level_complete:
+		for player in _players:
+			if is_instance_valid(player) and player is CharacterBody2D and player.velocity.length_squared() > 100.0:
+				is_moving = true
+				break
+	if get_node_or_null("/root/SoundManager") != null:
+		SoundManager.set_thruster_active(is_moving)
 
 # ── Players ───────────────────────────────────────────────────────────────────
 
@@ -151,6 +177,104 @@ func _setupLine() -> void:
 	var line = $Line2D
 	line.set_tracked_nodes(_players)
 
+# ── Background ────────────────────────────────────────────────────────────────
+
+class SciFiGrid extends Node2D:
+	var left: float
+	var top: float
+	var width: float
+	var height: float
+
+	func _draw() -> void:
+		var col_grid = Color(0.0, 0.75, 1.0, 0.05)
+		var col_major = Color(0.0, 0.85, 1.0, 0.12)
+		var col_border = Color(0.0, 0.9, 1.0, 0.85)
+		var step = 50.0
+
+		# Holographic tactical matrix lines
+		var x = 0.0
+		while x <= width:
+			var c = col_major if fmod(x, 200.0) == 0.0 else col_grid
+			draw_line(Vector2(left + x, top), Vector2(left + x, top + height), c, 1.0)
+			x += step
+
+		var y = 0.0
+		while y <= height:
+			var c = col_major if fmod(y, 200.0) == 0.0 else col_grid
+			draw_line(Vector2(left, top + y), Vector2(left + width, top + y), c, 1.0)
+			y += step
+
+		# Luminous inner perimeter containment shield
+		draw_rect(Rect2(left, top, width, height), col_border, false, 2.0)
+
+func _setupBackground(levelData: LevelData) -> void:
+	var bg_container = Node2D.new()
+	bg_container.name = "Background"
+	bg_container.z_index = -10
+	$Env.add_child(bg_container)
+	$Env.move_child(bg_container, 0)
+
+	var left = levelData.windowSize.left
+	var right = levelData.windowSize.right
+	var top = levelData.windowSize.top
+	var bottom = levelData.windowSize.bottom
+	var extent = 50000.0
+
+	# 1. Inner arena playable area background
+	var inner_poly = _create_rect_poly(
+		Rect2(Vector2(left, top), Vector2(right - left, bottom - top)),
+		ARENA_BG_COLOR
+	)
+	bg_container.add_child(inner_poly)
+
+	# 2. Holographic tactical grid & neon perimeter
+	var grid = SciFiGrid.new()
+	grid.left = left
+	grid.top = top
+	grid.width = right - left
+	grid.height = bottom - top
+	bg_container.add_child(grid)
+
+	# 3. Outer background (region outside the border), matching border color
+	# Top outer rect
+	var outer_top = _create_rect_poly(
+		Rect2(Vector2(left - extent, top - extent), Vector2((right - left) + 2.0 * extent, extent)),
+		BORDER_COLOR
+	)
+	bg_container.add_child(outer_top)
+
+	# Bottom outer rect
+	var outer_bottom = _create_rect_poly(
+		Rect2(Vector2(left - extent, bottom), Vector2((right - left) + 2.0 * extent, extent)),
+		BORDER_COLOR
+	)
+	bg_container.add_child(outer_bottom)
+
+	# Left outer rect
+	var outer_left = _create_rect_poly(
+		Rect2(Vector2(left - extent, top), Vector2(extent, bottom - top)),
+		BORDER_COLOR
+	)
+	bg_container.add_child(outer_left)
+
+	# Right outer rect
+	var outer_right = _create_rect_poly(
+		Rect2(Vector2(right, top), Vector2(extent, bottom - top)),
+		BORDER_COLOR
+	)
+	bg_container.add_child(outer_right)
+
+func _create_rect_poly(rect: Rect2, color: Color) -> Polygon2D:
+	var poly = Polygon2D.new()
+	poly.color = color
+	poly.polygon = PackedVector2Array([
+		rect.position,
+		Vector2(rect.position.x + rect.size.x, rect.position.y),
+		rect.position + rect.size,
+		Vector2(rect.position.x, rect.position.y + rect.size.y)
+	])
+	return poly
+
 # ── Walls ─────────────────────────────────────────────────────────────────────
 
 func _setupWalls(levelData: LevelData) -> void:
@@ -168,7 +292,7 @@ func _setupWalls(levelData: LevelData) -> void:
 	#top horizontal wall
 	var spriteWallTop = Sprite2D.new()
 	var textureWallTop = DrawableTexture2D.new()
-	textureWallTop.setup(right - left, wallSize, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, Color(1,0.5,1))
+	textureWallTop.setup(right - left, wallSize, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, BORDER_COLOR)
 	spriteWallTop.texture = textureWallTop
 	spriteWallTop.position = Vector2(left + (right - left)/2, top + originOffset)
 	var csWallTop = CollisionShape2D.new()
@@ -180,7 +304,7 @@ func _setupWalls(levelData: LevelData) -> void:
 	#left vertical wall
 	var spriteWallLeft = Sprite2D.new()
 	var textureWallLeft = DrawableTexture2D.new()
-	textureWallLeft.setup(wallSize, bottom - top, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, Color(1,0.5,1))
+	textureWallLeft.setup(wallSize, bottom - top, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, BORDER_COLOR)
 	spriteWallLeft.texture = textureWallLeft
 	spriteWallLeft.position = Vector2(left + originOffset, top + (bottom - top)/2)
 	var csWallLeft = CollisionShape2D.new()
@@ -192,7 +316,7 @@ func _setupWalls(levelData: LevelData) -> void:
 	#bottom horizontal wall
 	var spriteWallBottom = Sprite2D.new()
 	var textureWallBottom = DrawableTexture2D.new()
-	textureWallBottom.setup(right - left, wallSize, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, Color(1,0.5,1))
+	textureWallBottom.setup(right - left, wallSize, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, BORDER_COLOR)
 	spriteWallBottom.texture = textureWallBottom
 	spriteWallBottom.position = Vector2(left + (right - left)/2, bottom - originOffset)
 	var csWallBottom = CollisionShape2D.new()
@@ -204,7 +328,7 @@ func _setupWalls(levelData: LevelData) -> void:
 	#right vertical wall
 	var spriteWallRight = Sprite2D.new()
 	var textureWallRight = DrawableTexture2D.new()
-	textureWallRight.setup(wallSize, bottom - top, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, Color(1,0.5,1))
+	textureWallRight.setup(wallSize, bottom - top, DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, BORDER_COLOR)
 	spriteWallRight.texture = textureWallRight
 	spriteWallRight.position = Vector2(right - originOffset, top + (bottom - top)/2)
 	var csWallRight = CollisionShape2D.new()
@@ -251,10 +375,20 @@ func _setupExitPoints(levelData: LevelData) -> void:
 	for exitLoc in levelData.exitsLocations:
 		var epInstance = ExitPointScene.instantiate()
 		epInstance.position = exitLoc.position()
-		epInstance.player_reached_exit.connect(_on_exit_state_changed)
-		epInstance.player_left_exit.connect(_on_exit_state_changed)
+		epInstance.player_reached_exit.connect(_on_player_reached_exit)
+		epInstance.player_left_exit.connect(_on_player_left_exit)
 		_exit_points.append(epInstance)
 		blocks.add_child(epInstance)
+
+func _on_player_reached_exit(exit_point: Area2D, body: Node2D) -> void:
+	if get_node_or_null("/root/SoundManager") != null:
+		SoundManager.play_portal_enter()
+	_on_exit_state_changed(exit_point, body)
+
+func _on_player_left_exit(exit_point: Area2D, body: Node2D) -> void:
+	if get_node_or_null("/root/SoundManager") != null:
+		SoundManager.play_portal_leave()
+	_on_exit_state_changed(exit_point, body)
 
 func _on_exit_state_changed(_exit_point: Area2D, _body: Node2D) -> void:
 	_check_win_condition()
@@ -281,6 +415,9 @@ func _on_level_complete() -> void:
 	print("=== LEVEL COMPLETE! ===")
 	_disable_player_movement()
 	
+	if get_node_or_null("/root/SoundManager") != null:
+		SoundManager.play_level_complete()
+
 	if get_node_or_null("/root/GameManager") != null:
 		GameManager.complete_level(GameManager.current_world, GameManager.current_level)
 	
@@ -346,5 +483,8 @@ func _on_player_hit_danger(_danger_zone: Area2D, _body: Node2D) -> void:
 	_game_over = true
 	print("Player hit a danger zone! Showing Game Over dialog...")
 	_disable_player_movement()
+	if get_node_or_null("/root/SoundManager") != null:
+		SoundManager.play_hazard_breach()
+		SoundManager.play_game_over()
 	if _dialogs:
 		_dialogs.show_game_over()

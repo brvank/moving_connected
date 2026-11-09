@@ -6,15 +6,16 @@ Comprehensive technical documentation for **Moving Connected**, a 2D multi-avata
 
 ## 1. Overview & Core Concept
 
-**Moving Connected** is a multi-avatar navigation puzzle game.
+**Moving Connected** is a sci-fi cybernetic multi-avatar navigation puzzle game.
+- **Theme:** High-tech sci-fi cybernetic aesthetic featuring holographic tactical matrices, quantum laser tethers, cyber drones, antimatter phase gates, and neon containment barriers.
 - **Simultaneous Input:** All players receive identical movement inputs (`ui_left`, `ui_right`, `ui_up`, `ui_down`) and move in unison at the same speed.
-- **Visual Connection:** All players are linked by a `Line2D` polygon that stretches dynamically between them.
-- **Scalable Avatars & Exits:** Supports an arbitrary number of players ($N$) and exit points specified via JSON.
-- **Level Objective:** Every exit point must be occupied simultaneously by a distinct player (1-to-1 matching) to achieve level completion.
-- **Hazards & Puzzles:** Players must negotiate fixed blocks, shifting blocks, signal gates (pressure switches), and danger zones (static, moving, and timed).
-- **Camera Cycling:** The player can press `Tab` (`switch_camera`) to cycle the camera view across each avatar.
-- **Multi-Level Architecture:** Hierarchical level structure grouped by world (e.g. World 1, World 2), driven by a global `GameManager` singleton.
-- **Game Flow Modals:** In-game popup dialogs for **Game Over** (retry, levels, home) and **Level Complete** (next level, retry, levels, home).
+- **Visual Connection:** All players are linked by a quantum plasma `Line2D` polygon that stretches dynamically between them.
+- **Scalable Avatars & Exits:** Supports an arbitrary number of quantum avatars ($N$) and extraction portals specified via JSON.
+- **Level Objective:** Every extraction pad must be occupied simultaneously by a distinct avatar (1-to-1 matching) to achieve extraction.
+- **Hazards & Puzzles:** Players must negotiate kinetic barriers, shifting bulkheads, quantum signal gates (matrix terminals), and lethal radiation fields (static, moving, and timed).
+- **Camera Tracking:** Smooth physics camera centered on player centroid with dynamic auto-zoom and bounds clamping.
+- **Multi-Level Architecture:** Hierarchical sector structure grouped by world (Sectors 1–4), driven by a global `GameManager` singleton.
+- **Game Flow Modals:** In-game popup dialogs for **Containment Breach** (retry, sectors, abort), **Extraction Successful** (next chamber, replay, sectors, abort), and **System Stasis** (pause).
 
 ---
 
@@ -40,6 +41,15 @@ moving-connected/
 │
 ├── game_manager/
 │   └── game_manager.gd               # Autoload singleton managing worlds, levels, and scene flows
+│
+├── sound_manager/
+│   └── sound_manager.gd              # Autoload singleton managing BGM, thruster loop, and SFX
+│
+├── audio/
+│   ├── bgm/
+│   │   └── cyber_ambience.wav        # Seamless looping sci-fi synth-pulse ambient soundtrack
+│   └── sfx/                          # High-tech UI, thruster, portal, gate, and victory/game-over sounds
+│
 │
 ├── screens/
 │   ├── main_menu/

@@ -21,20 +21,20 @@ func _ready() -> void:
 	_sprite = $Sprite2D
 	var cs2d = $CollisionShape2D
 
-	# Default state — green
+	# Default state — Neon Emerald Warp Portal
 	_default_texture = DrawableTexture2D.new()
 	_default_texture.setup(
 		width, height,
 		DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8,
-		Color(0.0, 1.0, 0.2, 0.8)
+		Color(0.0, 1.0, 0.65, 0.85)
 	)
 
-	# Occupied state — bright yellow
+	# Occupied state — Supercharged Quantum Extraction Pad
 	_occupied_texture = DrawableTexture2D.new()
 	_occupied_texture.setup(
 		width, height,
 		DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8,
-		Color(1.0, 0.9, 0.0, 1.0)
+		Color(0.2, 1.0, 0.95, 1.0)
 	)
 
 	_sprite.texture = _default_texture

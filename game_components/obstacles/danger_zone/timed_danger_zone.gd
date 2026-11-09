@@ -16,20 +16,20 @@ func _ready() -> void:
 	_sprite = $Sprite2D
 	var cs2d = $CollisionShape2D
 
-	# Active state — solid red
+	# Active state — Neon laser plasma hazard
 	_active_texture = DrawableTexture2D.new()
 	_active_texture.setup(
 		width, height,
 		DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8,
-		Color(1.0, 0.0, 0.0, 0.7)
+		Color(1.0, 0.08, 0.25, 0.8)
 	)
 
-	# Inactive state — faded red
+	# Inactive state — Faded plasma field
 	_inactive_texture = DrawableTexture2D.new()
 	_inactive_texture.setup(
 		width, height,
 		DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8,
-		Color(1.0, 0.0, 0.0, 0.15)
+		Color(1.0, 0.08, 0.25, 0.15)
 	)
 
 	_sprite.texture = _active_texture

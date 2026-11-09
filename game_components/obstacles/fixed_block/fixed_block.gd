@@ -14,7 +14,7 @@ func _ready() -> void:
 		width, 
 		height, 
 		DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8, 
-		Color(1.0, 0.502, 0.051, 1.0)
+		Color(0.18, 0.28, 0.42, 1.0)
 	)
 	sprite2d.texture = texture2d
 	var rShape2d = RectangleShape2D.new()

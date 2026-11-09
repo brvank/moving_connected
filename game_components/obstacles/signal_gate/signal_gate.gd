@@ -9,6 +9,7 @@ var block_position: Vector2
 var switch_position: Vector2
 
 var _overlap_count: int = 0
+var _is_open: bool = false
 var _block_collision: CollisionShape2D
 var _block_sprite: Sprite2D
 var _switch_sprite: Sprite2D
@@ -25,13 +26,13 @@ func _ready() -> void:
 	_closed_texture.setup(
 		block_width, block_height,
 		DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8,
-		Color(0.5, 0.0, 1.0, 1.0)
+		Color(0.65, 0.15, 1.0, 0.95)
 	)
 	_open_texture = DrawableTexture2D.new()
 	_open_texture.setup(
 		block_width, block_height,
 		DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8,
-		Color(0.5, 0.0, 1.0, 0.25)
+		Color(0.65, 0.15, 1.0, 0.2)
 	)
 	_block_sprite.texture = _closed_texture
 	block.add_child(_block_sprite)
@@ -53,7 +54,7 @@ func _ready() -> void:
 	switchTexture.setup(
 		switch_width, switch_height,
 		DrawableTexture2D.DrawableFormat.DRAWABLE_FORMAT_RGBA8,
-		Color(0.0, 0.8, 0.4, 0.8)
+		Color(0.0, 0.85, 0.75, 0.85)
 	)
 	_switch_sprite.texture = switchTexture
 	switch_area.add_child(_switch_sprite)
@@ -80,7 +81,13 @@ func _on_switch_body_exited(body: Node2D) -> void:
 		_update_gate_state()
 
 func _update_gate_state() -> void:
-	if _overlap_count > 0:
+	var should_open = _overlap_count > 0
+	if should_open != _is_open:
+		_is_open = should_open
+		if get_node_or_null("/root/SoundManager") != null:
+			SoundManager.play_gate_toggle()
+
+	if _is_open:
 		# Player on switch → gate open (collision disabled)
 		_block_collision.set_deferred("disabled", true)
 		_block_sprite.texture = _open_texture

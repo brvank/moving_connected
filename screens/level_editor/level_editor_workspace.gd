@@ -21,15 +21,15 @@ const ITEM_SIZES: Dictionary = {
 
 # Item colors matching game entities
 const ITEM_COLORS: Dictionary = {
-	"player": Color(0.4, 0.9, 1.0, 1.0),
-	"exit": Color(0.0, 1.0, 0.2, 0.8),
-	"fixed_block": Color(1.0, 0.502, 0.051, 1.0),
-	"shifting_block": Color(1.0, 0.702, 0.251, 1.0),
-	"signal_gate_block": Color(0.5, 0.0, 1.0, 1.0),
-	"signal_gate_switch": Color(0.0, 0.8, 0.4, 0.8),
-	"fixed_danger": Color(1.0, 0.0, 0.0, 0.7),
-	"shifting_danger": Color(1.0, 0.2, 0.2, 0.7),
-	"timed_danger": Color(1.0, 0.0, 0.0, 0.5),
+	"player": Color(0.2, 0.9, 1.0, 1.0),
+	"exit": Color(0.0, 1.0, 0.65, 0.85),
+	"fixed_block": Color(0.18, 0.28, 0.42, 1.0),
+	"shifting_block": Color(1.0, 0.6, 0.15, 1.0),
+	"signal_gate_block": Color(0.65, 0.15, 1.0, 1.0),
+	"signal_gate_switch": Color(0.0, 0.85, 0.75, 0.85),
+	"fixed_danger": Color(1.0, 0.08, 0.25, 0.8),
+	"shifting_danger": Color(1.0, 0.08, 0.25, 0.8),
+	"timed_danger": Color(1.0, 0.08, 0.25, 0.6),
 }
 
 # Display labels for items
@@ -374,11 +374,11 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 
 func _draw() -> void:
 	# 1. Level Canvas Background
-	draw_rect(Rect2(Vector2.ZERO, _boundary_size), Color(0.12, 0.12, 0.17, 1.0), true)
+	draw_rect(Rect2(Vector2.ZERO, _boundary_size), Color(0.02, 0.035, 0.07, 1.0), true)
 	
 	# 2. Grid lines (subtle)
 	var grid_step = 50.0
-	var col_grid = Color(0.2, 0.22, 0.3, 0.4)
+	var col_grid = Color(0.0, 0.75, 1.0, 0.12)
 	var x = 0.0
 	while x <= _boundary_size.x:
 		draw_line(Vector2(x, 0), Vector2(x, _boundary_size.y), col_grid, 1.0)
@@ -389,7 +389,7 @@ func _draw() -> void:
 		y += grid_step
 		
 	# 3. Outer boundary walls (thickness 20px, matching game launcher walls)
-	var wall_color = Color(1.0, 0.5, 1.0, 0.7) # game wall color
+	var wall_color = Color(0.05, 0.08, 0.16, 1.0) # sci-fi hull color
 	var wall_thickness = 20.0
 	# Top wall
 	draw_rect(Rect2(0, 0, _boundary_size.x, wall_thickness), wall_color, true)
@@ -399,6 +399,8 @@ func _draw() -> void:
 	draw_rect(Rect2(0, 0, wall_thickness, _boundary_size.y), wall_color, true)
 	# Right wall
 	draw_rect(Rect2(_boundary_size.x - wall_thickness, 0, wall_thickness, _boundary_size.y), wall_color, true)
+	# Glowing containment perimeter inner stroke
+	draw_rect(Rect2(wall_thickness, wall_thickness, _boundary_size.x - 2.0 * wall_thickness, _boundary_size.y - 2.0 * wall_thickness), Color(0.0, 0.9, 1.0, 0.85), false, 2.0)
 	
 	# 4. Connecting lines for Signal Gates
 	for item in placed_items:
