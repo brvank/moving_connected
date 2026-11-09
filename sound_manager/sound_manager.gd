@@ -1,5 +1,10 @@
 extends Node
 
+signal bgm_toggled(is_muted: bool)
+signal sfx_toggled(is_muted: bool)
+
+const AUDIO_SETTINGS_PATH: String = "user://audio_settings.json"
+
 # ── Audio Streams ─────────────────────────────────────────────────────────────
 const BGM_STREAM = preload("res://audio/bgm/cyber_ambience.wav")
 const UI_CLICK_STREAM = preload("res://audio/sfx/ui_click.wav")
@@ -23,11 +28,16 @@ var _sfx_index: int = 0
 var _is_thruster_active: bool = false
 var _thruster_volume: float = -80.0
 
+var is_bgm_muted: bool = false
+var is_sfx_muted: bool = false
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	load_settings()
 	_setup_audio_players()
 	_hook_tree_buttons()
-	play_bgm()
+	if not is_bgm_muted:
+		play_bgm()
 
 func _setup_audio_players() -> void:
 	# 1. Background Music Player (Seamless Looping)
@@ -69,44 +79,122 @@ func _setup_audio_players() -> void:
 		_sfx_players.append(p)
 
 func _process(delta: float) -> void:
+	if is_sfx_muted:
+		_thruster_volume = -80.0
+		if _thruster_player:
+			_thruster_player.volume_db = -80.0
+		return
+
 	# Smoothly crossfade thruster hum based on player velocity
 	var target_db = -10.0 if _is_thruster_active else -80.0
 	_thruster_volume = lerpf(_thruster_volume, target_db, delta * 12.0)
-	_thruster_player.volume_db = _thruster_volume
+	if _thruster_player:
+		_thruster_player.volume_db = _thruster_volume
+
+# ── Settings Persistence ──────────────────────────────────────────────────────
+
+func save_settings() -> void:
+	var data: Dictionary = {
+		"bgm_muted": is_bgm_muted,
+		"sfx_muted": is_sfx_muted
+	}
+	var f = FileAccess.open(AUDIO_SETTINGS_PATH, FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(data, "\t"))
+		f.close()
+
+func load_settings() -> void:
+	if not FileAccess.file_exists(AUDIO_SETTINGS_PATH):
+		return
+	var f = FileAccess.open(AUDIO_SETTINGS_PATH, FileAccess.READ)
+	if not f:
+		return
+	var content = f.get_as_text()
+	f.close()
+	var json = JSON.new()
+	if json.parse(content) == OK and json.data is Dictionary:
+		var d: Dictionary = json.data
+		if d.has("bgm_muted"):
+			is_bgm_muted = bool(d["bgm_muted"])
+		if d.has("sfx_muted"):
+			is_sfx_muted = bool(d["sfx_muted"])
 
 # ── Thruster Controls ─────────────────────────────────────────────────────────
 
 func set_thruster_active(active: bool) -> void:
 	_is_thruster_active = active
 
-# ── BGM Controls ──────────────────────────────────────────────────────────────
+# ── BGM Controls & Toggle ─────────────────────────────────────────────────────
+
+func toggle_bgm() -> bool:
+	set_bgm_muted(not is_bgm_muted)
+	return is_bgm_muted
+
+func set_bgm_muted(muted: bool) -> void:
+	is_bgm_muted = muted
+	if _bgm_player:
+		if is_bgm_muted:
+			_bgm_player.stream_paused = true
+		else:
+			_bgm_player.stream_paused = false
+			if not _bgm_player.playing:
+				_bgm_player.play()
+	save_settings()
+	bgm_toggled.emit(is_bgm_muted)
 
 func play_bgm() -> void:
-	if _bgm_player and not _bgm_player.playing:
-		_bgm_player.play()
+	if is_bgm_muted:
+		return
+	if _bgm_player:
+		_bgm_player.stream_paused = false
+		if not _bgm_player.playing:
+			_bgm_player.play()
 
 func stop_bgm() -> void:
 	if _bgm_player:
 		_bgm_player.stop()
 
+# ── SFX Controls & Toggle ─────────────────────────────────────────────────────
+
+func toggle_sfx() -> bool:
+	set_sfx_muted(not is_sfx_muted)
+	return is_sfx_muted
+
+func set_sfx_muted(muted: bool) -> void:
+	is_sfx_muted = muted
+	if is_sfx_muted:
+		_thruster_volume = -80.0
+		if _thruster_player:
+			_thruster_player.volume_db = -80.0
+		if _ui_player:
+			_ui_player.stop()
+		for p in _sfx_players:
+			p.stop()
+	save_settings()
+	sfx_toggled.emit(is_sfx_muted)
+
 # ── UI SFX ────────────────────────────────────────────────────────────────────
 
 func play_ui_click() -> void:
-	if _ui_player:
-		_ui_player.stream = UI_CLICK_STREAM
-		_ui_player.volume_db = -3.0
-		_ui_player.play()
+	if is_sfx_muted or not _ui_player:
+		return
+	_ui_player.stream = UI_CLICK_STREAM
+	_ui_player.volume_db = -3.0
+	_ui_player.play()
 
 func play_ui_hover() -> void:
-	if _ui_player:
-		if not _ui_player.playing or _ui_player.stream == UI_HOVER_STREAM:
-			_ui_player.stream = UI_HOVER_STREAM
-			_ui_player.volume_db = -12.0
-			_ui_player.play()
+	if is_sfx_muted or not _ui_player:
+		return
+	if not _ui_player.playing or _ui_player.stream == UI_HOVER_STREAM:
+		_ui_player.stream = UI_HOVER_STREAM
+		_ui_player.volume_db = -12.0
+		_ui_player.play()
 
 # ── Gameplay SFX ──────────────────────────────────────────────────────────────
 
 func play_sfx(stream: AudioStream, volume_db: float = 0.0) -> void:
+	if is_sfx_muted:
+		return
 	var player = _sfx_players[_sfx_index]
 	_sfx_index = (_sfx_index + 1) % SFX_POOL_SIZE
 	player.stream = stream
