@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://game_components/player/player.gd" id="1_player"]
-[ext_resource type="Texture2D" uid="uid://bb3btspgn5rs8" path="res://icon.svg" id="2_icon"]
+[ext_resource type="Texture2D" uid="uid://cem7oc757v1cv" path="res://assets/player/player_avatar.svg" id="2_avatar"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(32, 32)
@@ -11,7 +11,7 @@ script = ExtResource("1_player")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_icon")
+texture = ExtResource("2_avatar")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_player")

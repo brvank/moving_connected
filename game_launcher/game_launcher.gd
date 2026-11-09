@@ -63,7 +63,6 @@ func _ready() -> void:
 	_setupWalls(levelData)
 	_setupPlayers(levelData)
 	_setupCamera(levelData)
-	_setupLine()
 	_setupBlocks(levelData)
 	_setupExitPoints(levelData)
 	_setupSignalGates(levelData)
@@ -170,12 +169,6 @@ func _update_camera(delta: float) -> void:
 
 	var target_zoom = Vector2(fit_zoom, fit_zoom)
 	_camera.zoom = _camera.zoom.lerp(target_zoom, clampf(CAMERA_ZOOM_LERP_SPEED * delta, 0.0, 1.0))
-
-# ── Line ──────────────────────────────────────────────────────────────────────
-
-func _setupLine() -> void:
-	var line = $Line2D
-	line.set_tracked_nodes(_players)
 
 # ── Background ────────────────────────────────────────────────────────────────
 

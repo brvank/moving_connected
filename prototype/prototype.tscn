@@ -1,20 +1,9 @@
 [gd_scene format=3 uid="uid://cjakiwlimuinx"]
 
 [ext_resource type="Script" uid="uid://comjlr7a4s3fc" path="res://game_launcher/game_launcher.gd" id="1_ekn36"]
-[ext_resource type="Script" uid="uid://j6b05fdewk4r" path="res://prototype/line_2d.gd" id="3_p732r"]
 
 [node name="Prototype" type="Node2D" unique_id=1152282244]
 script = ExtResource("1_ekn36")
-
-[node name="Line2D" type="Line2D" parent="." unique_id=697328363]
-position = Vector2(0, 8)
-width = 5.0
-default_color = Color(0, 0.9, 1, 0.85)
-joint_mode = 2
-begin_cap_mode = 2
-end_cap_mode = 2
-closed = true
-script = ExtResource("3_p732r")
 
 [node name="Env" type="Node2D" parent="." unique_id=417289671]
 
