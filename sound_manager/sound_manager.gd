@@ -37,6 +37,8 @@ func _setup_audio_players() -> void:
 	var bgm_stream = BGM_STREAM.duplicate()
 	if bgm_stream is AudioStreamWAV:
 		bgm_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		bgm_stream.loop_begin = 0
+		bgm_stream.loop_end = int(bgm_stream.get_length() * bgm_stream.mix_rate)
 	_bgm_player.stream = bgm_stream
 	_bgm_player.volume_db = -8.0
 	add_child(_bgm_player)
@@ -47,6 +49,8 @@ func _setup_audio_players() -> void:
 	var thruster_stream = THRUSTER_STREAM.duplicate()
 	if thruster_stream is AudioStreamWAV:
 		thruster_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		thruster_stream.loop_begin = 0
+		thruster_stream.loop_end = int(thruster_stream.get_length() * thruster_stream.mix_rate)
 	_thruster_player.stream = thruster_stream
 	_thruster_player.volume_db = -80.0
 	add_child(_thruster_player)
