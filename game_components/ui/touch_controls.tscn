@@ -1,123 +1,20 @@
 [gd_scene format=3 uid="uid://bvyw5gksn6t4m"]
 
 [ext_resource type="Script" uid="uid://bvvkrsww6wgnq" path="res://game_components/ui/touch_controls.gd" id="1_touch"]
-[ext_resource type="Texture2D" uid="uid://d1pcn3phxlt0g" path="res://assets/icons/dpad_up.svg" id="2_up"]
-[ext_resource type="Texture2D" uid="uid://lxed0kssw3cj" path="res://assets/icons/dpad_left.svg" id="3_left"]
-[ext_resource type="Texture2D" uid="uid://bgcp1pgk21wp6" path="res://assets/icons/dpad_right.svg" id="4_right"]
-[ext_resource type="Texture2D" uid="uid://bloanxwvnhnu4" path="res://assets/icons/dpad_down.svg" id="5_down"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-bg_color = Color(0.04, 0.08, 0.16, 0.75)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0.75, 1, 0.6)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
-content_margin_left = 12.0
-content_margin_top = 12.0
-content_margin_right = 12.0
-content_margin_bottom = 12.0
-bg_color = Color(0, 0.4, 0.7, 0.85)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.3, 1, 1, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[ext_resource type="Script" path="res://game_components/ui/virtual_joystick.gd" id="2_joystick"]
 
 [node name="TouchControls" type="CanvasLayer"]
 layer = 9
 script = ExtResource("1_touch")
 
-[node name="DPad" type="Control" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="BtnUp" type="Button" parent="DPad"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 70)
-layout_mode = 1
-anchors_preset = -1
+[node name="VirtualJoystick" type="Control" parent="."]
+custom_minimum_size = Vector2(280, 280)
+layout_mode = 3
+anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 90.0
-offset_top = -230.0
-offset_right = 160.0
-offset_bottom = -160.0
-focus_mode = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-icon = ExtResource("2_up")
-icon_alignment = 1
-expand_icon = true
-
-[node name="BtnLeft" type="Button" parent="DPad"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 70)
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -150.0
-offset_right = 80.0
-offset_bottom = -80.0
-focus_mode = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-icon = ExtResource("3_left")
-icon_alignment = 1
-expand_icon = true
-
-[node name="BtnRight" type="Button" parent="DPad"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 70)
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 170.0
-offset_top = -150.0
-offset_right = 240.0
-offset_bottom = -80.0
-focus_mode = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-icon = ExtResource("4_right")
-icon_alignment = 1
-expand_icon = true
-
-[node name="BtnDown" type="Button" parent="DPad"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 70)
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 90.0
-offset_top = -70.0
-offset_right = 160.0
-offset_bottom = 0.0
-focus_mode = 0
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-icon = ExtResource("5_down")
-icon_alignment = 1
-expand_icon = true
+offset_top = -280.0
+offset_right = 280.0
+grow_vertical = 0
+mouse_filter = 0
+script = ExtResource("2_joystick")

@@ -23,10 +23,11 @@ Comprehensive technical documentation for **Moving Connected**, a 2D multi-avata
 
 | Action | Input Mapping | Description |
 |---|---|---|
-| `ui_left` | Left Arrow / A / D-pad Left | Moves all players left |
-| `ui_right` | Right Arrow / D / D-pad Right | Moves all players right |
-| `ui_up` | Up Arrow / W / D-pad Up | Moves all players up |
-| `ui_down` | Down Arrow / S / D-pad Down | Moves all players down |
+| `ui_left` | Left Arrow / A / D-pad Left / Joystick Drag Left | Moves all players left |
+| `ui_right` | Right Arrow / D / D-pad Right / Joystick Drag Right | Moves all players right |
+| `ui_up` | Up Arrow / W / D-pad Up / Joystick Drag Up | Moves all players up |
+| `ui_down` | Down Arrow / S / D-pad Down / Joystick Drag Down | Moves all players down |
+| `Virtual Joystick` | Drag anywhere in bottom-left zone | 360° analog drag-to-move with dynamic center, laser tether, and silent input (no tap sound) |
 | `switch_camera` | `Tab` (Physical Key 4194306), Joypad Button 9, Joypad Axis | Cycles camera focus to the next player avatar |
 
 ---
@@ -91,7 +92,11 @@ moving-connected/
 │   │
 │   ├── ui/
 │   │   ├── game_dialogs.gd           # Modal overlay script (Game Over & Level Complete)
-│   │   └── game_dialogs.tscn         # CanvasLayer UI overlay
+│   │   ├── game_dialogs.tscn         # CanvasLayer UI overlay
+│   │   ├── touch_controls.gd         # Touch controls CanvasLayer overlay
+│   │   ├── touch_controls.tscn       # Touch controls scene with DragJoystick
+│   │   ├── virtual_joystick.gd       # Drag-to-move virtual joystick (DragJoystick)
+│   │   └── virtual_joystick.gd.uid
 │   │
 │   └── obstacles/
 │       ├── fixed_block/

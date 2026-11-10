@@ -238,6 +238,8 @@ func _hook_buttons_in_node(node: Node) -> void:
 		_hook_buttons_in_node(child)
 
 func _hook_button(button: Button) -> void:
+	if button.has_meta("no_sound") and button.get_meta("no_sound"):
+		return
 	if not button.has_meta("__sound_hooked"):
 		button.set_meta("__sound_hooked", true)
 		button.pressed.connect(play_ui_click)

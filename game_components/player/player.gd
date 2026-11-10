@@ -16,5 +16,8 @@ func _process(delta: float) -> void:
 		sprite.scale = Vector2(0.25 * pulse, 0.25 * pulse)
 
 func _physics_process(_delta: float) -> void:
-	velocity = Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down")).normalized() * SPEED
+	var move_input := Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down"))
+	if move_input.length_squared() > 1.0:
+		move_input = move_input.normalized()
+	velocity = move_input * SPEED
 	move_and_slide()
