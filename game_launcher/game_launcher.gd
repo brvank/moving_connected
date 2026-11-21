@@ -357,6 +357,7 @@ func _setupBlocks(levelData: LevelData) -> void:
 		sbInstance.movementDirection = shiftingBlock.shiftingDirection
 		sbInstance.width = shiftingBlock.width
 		sbInstance.height = shiftingBlock.height
+		sbInstance.movementDistance = shiftingBlock.movementDistance
 		sbInstance.position = shiftingBlock.position()
 		blocks.add_child(sbInstance)
 
@@ -457,6 +458,7 @@ func _setupDangerZones(levelData: LevelData) -> void:
 		sdInstance.movementDirection = sdLoc.shiftingDirection
 		sdInstance.width = sdLoc.width
 		sdInstance.height = sdLoc.height
+		sdInstance.movementDistance = sdLoc.movementDistance
 		sdInstance.position = sdLoc.position()
 		sdInstance.player_hit_danger.connect(_on_player_hit_danger)
 		blocks.add_child(sdInstance)

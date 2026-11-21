@@ -150,12 +150,12 @@ func generate_level(
 		var sb_out: Array = []
 		for item in sb_placed:
 			var pt: Array = _tile_center(item[0], item[1])
-			sb_out.append([pt[0], pt[1], item[2], TILE, TILE])
+			sb_out.append([pt[0], pt[1], item[2], TILE, TILE, TILE])
 
 		var sd_out: Array = []
 		for item in sd_placed:
 			var pt: Array = _tile_center(item[0], item[1])
-			sd_out.append([pt[0], pt[1], item[2], TILE, TILE])
+			sd_out.append([pt[0], pt[1], item[2], TILE, TILE, TILE])
 
 		var sg_out: Array = []
 		for g in gates:

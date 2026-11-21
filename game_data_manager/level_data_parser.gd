@@ -45,17 +45,20 @@ static func _extractSinglePointPositions(arr: Array, is_shifting: bool = false) 
 			var shift_dir: int = 0
 			var w: int = 20
 			var h: int = 50
+			var move_dist: float = 100.0
 			if is_shifting:
 				if ele.size() >= 3:
 					shift_dir = int(ele[2])
 				if ele.size() >= 5:
 					w = int(ele[3])
 					h = int(ele[4])
+				if ele.size() >= 6:
+					move_dist = float(ele[5])
 			else:
 				if ele.size() >= 4:
 					w = int(ele[2])
 					h = int(ele[3])
-			resultSinglePointPosisions.append(SinglePointPosition.new(pos, shift_dir, w, h))
+			resultSinglePointPosisions.append(SinglePointPosition.new(pos, shift_dir, w, h, move_dist))
 	return resultSinglePointPosisions
 
 static func _arrayToVector2(arr: Array) -> Vector2:
