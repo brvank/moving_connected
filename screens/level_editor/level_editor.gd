@@ -27,6 +27,18 @@ extends Control
 @onready var clear_all_btn: Button = %ClearAllBtn
 @onready var back_btn: Button = %BackBtn
 
+# Generate Level controls
+@onready var difficulty_option: OptionButton = %DifficultyOption
+@onready var obstacle_checkboxes: GridContainer = %ObstacleCheckboxes
+@onready var check_fb: CheckBox = %CheckFb
+@onready var check_sb: CheckBox = %CheckSb
+@onready var check_sg: CheckBox = %CheckSg
+@onready var check_fd: CheckBox = %CheckFd
+@onready var check_sd: CheckBox = %CheckSd
+@onready var check_td: CheckBox = %CheckTd
+@onready var generate_btn: Button = %GenerateBtn
+@onready var generate_status_label: Label = %GenerateStatusLabel
+
 var _json_dialog: AcceptDialog = null
 var _load_json_dialog: ConfirmationDialog = null
 var _file_dialog: FileDialog = null
@@ -37,7 +49,15 @@ func _ready() -> void:
 	direction_option.clear()
 	direction_option.add_item("Vertical (0)", 0)
 	direction_option.add_item("Horizontal (1)", 1)
-	
+
+	# Configure difficulty dropdown
+	difficulty_option.clear()
+	difficulty_option.add_item("Easy", 0)
+	difficulty_option.add_item("Medium", 1)
+	difficulty_option.add_item("Hard", 2)
+	difficulty_option.add_item("Expert", 3)
+	difficulty_option.selected = 1
+
 	# Connect boundary controls
 	apply_boundary_btn.pressed.connect(_on_apply_boundary)
 	boundary_width_spin.value_changed.connect(func(_val): _on_apply_boundary())
@@ -59,6 +79,9 @@ func _ready() -> void:
 	item_width_spin.value_changed.connect(_on_item_size_changed)
 	item_height_spin.value_changed.connect(_on_item_size_changed)
 	
+	# Connect generate button
+	generate_btn.pressed.connect(_on_generate_level)
+
 	# Connect action buttons
 	load_json_btn.pressed.connect(_on_load_json)
 	extract_json_btn.pressed.connect(_on_extract_json)
@@ -369,6 +392,64 @@ func _show_alert(message: String) -> void:
 	_alert_dialog.dialog_text = message
 	add_child(_alert_dialog)
 	_alert_dialog.popup_centered()
+
+# ── Feature: Auto-Generate Level ──────────────────────────────────────────────
+
+func _on_generate_level() -> void:
+	var difficulties := ["easy", "medium", "hard", "expert"]
+	var difficulty: String = difficulties[difficulty_option.selected]
+
+	# Build obstacle filter from checkboxes.
+	# "fb" (fixed block walls) are always present in every generated level.
+	# The checkboxes control the optional obstacle types passed to the generator.
+	var obs_list: Array[String] = []
+	if check_sb.button_pressed:
+		obs_list.append("sb")
+	if check_sg.button_pressed:
+		obs_list.append("sg")
+	if check_fd.button_pressed:
+		obs_list.append("fd")
+	if check_sd.button_pressed:
+		obs_list.append("sd")
+	if check_td.button_pressed:
+		obs_list.append("td")
+
+	generate_btn.disabled = true
+	generate_status_label.modulate = Color(0.6, 0.85, 0.65, 1)
+	generate_status_label.text = "Generating…"
+
+	# Run generator (this is synchronous; Godot will freeze briefly on complex levels)
+	var generator := LevelGenerator.new()
+	var result: Dictionary = generator.generate_level(difficulty, obs_list if not obs_list.is_empty() else null)
+
+	generate_btn.disabled = false
+
+	if result.is_empty():
+		generate_status_label.modulate = Color(1.0, 0.4, 0.4, 1)
+		generate_status_label.text = "Failed to generate — try again or switch difficulty."
+		return
+
+	var level_data: Dictionary = result["level"]
+	var meta: Dictionary = result["meta"]
+
+	# Convert generator output dict to JSON string and load into workspace
+	var json_str := JSON.stringify(level_data)
+	_load_from_json(json_str)
+
+	# Update boundary spinboxes to match generated level
+	var w_max: Array = level_data["w"][1]
+	boundary_width_spin.set_value_no_signal(w_max[0])
+	boundary_height_spin.set_value_no_signal(w_max[1])
+
+	var grid_w: int = meta["grid_size"][0]
+	var grid_h: int = meta["grid_size"][1]
+	generate_status_label.modulate = Color(0.4, 1.0, 0.6, 1)
+	generate_status_label.text = (
+		"%s • %dx%d grid\nPar: %d moves, %d stalls" % [
+			difficulty.capitalize(), grid_w, grid_h,
+			meta["par_moves"], meta["wall_stalls"]
+		]
+	)
 
 func _on_clear_all() -> void:
 	workspace.clear_all()
