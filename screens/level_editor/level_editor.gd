@@ -420,6 +420,7 @@ func _on_generate_level() -> void:
 
 	# Run generator (this is synchronous; Godot will freeze briefly on complex levels)
 	var generator := LevelGenerator.new()
+	@warning_ignore("incompatible_ternary")
 	var obs_arg = obs_list if not obs_list.is_empty() else null
 	var result: Dictionary = generator.generate_level(difficulty, obs_arg)
 	print("Level Generated: ")
