@@ -2,7 +2,7 @@ extends StaticBody2D
 
 @export_range(0, 1, 1) var movementDirection: int = 0
 
-@export var width = 20
+@export var width = 50
 @export var height = 50
 @export var movementDistance: float = 100.0
 @export var movementDuration: float = 1.0

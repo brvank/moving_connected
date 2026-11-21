@@ -3,7 +3,7 @@ extends Area2D
 signal player_hit_danger(danger_zone: Area2D, body: Node2D)
 
 @export_range(0, 1, 1) var movementDirection: int = 0
-@export var width: int = 20
+@export var width: int = 50
 @export var height: int = 50
 @export var movementDistance: float = 100.0
 @export var movementDuration: float = 1.0

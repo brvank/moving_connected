@@ -1,10 +1,10 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://25mdxfl77euy"]
 
-[ext_resource type="Script" path="res://game_components/obstacles/danger_zone/timed_danger_zone.gd" id="1_td"]
+[ext_resource type="Script" uid="uid://b7i4tgxfc2rwg" path="res://game_components/obstacles/danger_zone/timed_danger_zone.gd" id="1_td"]
 
-[node name="TimedDangerZone" type="Area2D"]
+[node name="TimedDangerZone" type="Area2D" unique_id=393333199]
 script = ExtResource("1_td")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1311503158]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2016999587]

@@ -1,8 +1,8 @@
 extends Node2D
 
-@export var block_width: int = 20
+@export var block_width: int = 50
 @export var block_height: int = 50
-@export var switch_width: int = 20
+@export var switch_width: int = 50
 @export var switch_height: int = 20
 
 var block_position: Vector2

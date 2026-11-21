@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-@export var width = 20
+@export var width = 50
 @export var height = 50
 
 func _ready() -> void:
