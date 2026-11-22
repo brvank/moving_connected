@@ -310,6 +310,35 @@ theme_override_font_sizes/font_size = 12
 text = "Click or drag an item to place it."
 autowrap_mode = 3
 
+[node name="PositionContainer" type="HBoxContainer" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=751737360]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="XLabel" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/PositionContainer" unique_id=462184535]
+layout_mode = 2
+text = "X:"
+
+[node name="ItemPosXSpin" type="SpinBox" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/PositionContainer" unique_id=1251233950]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+step = 0.01
+custom_arrow_step = 1.0
+
+[node name="YLabel" type="Label" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/PositionContainer" unique_id=462184536]
+layout_mode = 2
+text = "Y:"
+
+[node name="ItemPosYSpin" type="SpinBox" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList/PositionContainer" unique_id=1251233951]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 10000.0
+step = 0.01
+custom_arrow_step = 1.0
+
 [node name="DirectionContainer" type="HBoxContainer" parent="HSplitContainer/ToolPanel/ScrollContainer/ToolsList" unique_id=751737354]
 unique_name_in_owner = true
 visible = false

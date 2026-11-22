@@ -3,6 +3,9 @@ extends Control
 @onready var boundary_width_spin: SpinBox = %BoundaryWidthSpin
 @onready var boundary_height_spin: SpinBox = %BoundaryHeightSpin
 @onready var selected_info_label: Label = %SelectedInfoLabel
+@onready var position_container: HBoxContainer = %PositionContainer
+@onready var item_pos_x_spin: SpinBox = %ItemPosXSpin
+@onready var item_pos_y_spin: SpinBox = %ItemPosYSpin
 @onready var direction_container: HBoxContainer = %DirectionContainer
 @onready var direction_option: OptionButton = %DirectionOption
 @onready var size_container: HBoxContainer = %SizeContainer
@@ -75,6 +78,8 @@ func _ready() -> void:
 	
 	# Connect selection controls
 	delete_selected_btn.pressed.connect(_on_delete_selected)
+	item_pos_x_spin.value_changed.connect(_on_item_position_changed)
+	item_pos_y_spin.value_changed.connect(_on_item_position_changed)
 	direction_option.item_selected.connect(_on_direction_changed)
 	item_width_spin.value_changed.connect(_on_item_size_changed)
 	item_height_spin.value_changed.connect(_on_item_size_changed)
@@ -151,6 +156,21 @@ func _on_direction_changed(dir_index: int) -> void:
 	var idx = workspace.get_selected_index()
 	if idx >= 0:
 		workspace.update_item_direction(idx, dir_index)
+		var item = workspace.get_selected_item()
+		if not item.is_empty():
+			_update_selected_info(item)
+
+func _on_item_position_changed(_val: float = 0.0) -> void:
+	var idx = workspace.get_selected_index()
+	if idx >= 0:
+		var x = float(item_pos_x_spin.value)
+		var y = float(item_pos_y_spin.value)
+		workspace.update_item_position(idx, Vector2(x, y))
+		var item = workspace.get_selected_item()
+		if not item.is_empty():
+			item_pos_x_spin.set_value_no_signal(item.position.x)
+			item_pos_y_spin.set_value_no_signal(item.position.y)
+			_update_selected_info(item)
 
 func _on_item_size_changed(_val: float = 0.0) -> void:
 	var idx = workspace.get_selected_index()
@@ -160,21 +180,32 @@ func _on_item_size_changed(_val: float = 0.0) -> void:
 		workspace.update_item_size(idx, w, h)
 		var item = workspace.get_selected_item()
 		if not item.is_empty():
-			var type_name = item.type.replace("_", " ").capitalize()
-			var info = "%s\nPosition: (%d, %d)\nSize: %d x %d" % [type_name, int(item.position.x), int(item.position.y), int(item.width), int(item.height)]
-			if item.type in ["shifting_block", "shifting_danger"]:
-				info += "\nDirection: %s" % ["Vertical" if item.direction == 0 else "Horizontal"]
-			selected_info_label.text = info
+			item_pos_x_spin.set_value_no_signal(item.position.x)
+			item_pos_y_spin.set_value_no_signal(item.position.y)
+			_update_selected_info(item)
 
-func _on_item_selected(item_data: Dictionary) -> void:
+func _format_coord_str(val: float) -> String:
+	if is_equal_approx(val, roundf(val)):
+		return "%d" % int(roundf(val))
+	return str(snappedf(val, 0.01))
+
+func _update_selected_info(item_data: Dictionary) -> void:
 	var type_name = item_data.type.replace("_", " ").capitalize()
-	var info = "%s\nPosition: (%d, %d)" % [type_name, int(item_data.position.x), int(item_data.position.y)]
+	var pos_str = "(%s, %s)" % [_format_coord_str(item_data.position.x), _format_coord_str(item_data.position.y)]
+	var info = "%s\nPosition: %s" % [type_name, pos_str]
 	if item_data.has("width") and item_data.has("height"):
 		info += "\nSize: %d x %d" % [int(item_data.width), int(item_data.height)]
 	if item_data.has("direction") and item_data.type in ["shifting_block", "shifting_danger"]:
 		info += "\nDirection: %s" % ["Vertical" if item_data.direction == 0 else "Horizontal"]
 	selected_info_label.text = info
+
+func _on_item_selected(item_data: Dictionary) -> void:
+	_update_selected_info(item_data)
 	delete_selected_btn.visible = true
+	
+	position_container.visible = true
+	item_pos_x_spin.set_value_no_signal(item_data.position.x)
+	item_pos_y_spin.set_value_no_signal(item_data.position.y)
 	
 	var has_direction = item_data.type in ["shifting_block", "shifting_danger"]
 	direction_container.visible = has_direction
@@ -190,6 +221,7 @@ func _on_item_selected(item_data: Dictionary) -> void:
 func _on_item_deselected() -> void:
 	selected_info_label.text = "Click or drag an item to place it.\nClick placed item to select/move."
 	delete_selected_btn.visible = false
+	position_container.visible = false
 	direction_container.visible = false
 	size_container.visible = false
 
@@ -480,23 +512,23 @@ func _load_from_json(json_str: String) -> void:
 		workspace.set_boundary(Vector2(w, h))
 	
 	for p in level_data.playersLocations:
-		workspace.add_item("player", p.position())
+		workspace.add_item("player", p.position(), 0, -1, -1, -1, false)
 	for e in level_data.exitsLocations:
-		workspace.add_item("exit", e.position())
+		workspace.add_item("exit", e.position(), 0, -1, -1, -1, false)
 	for fb in level_data.fixedBlocksLocations:
-		workspace.add_item("fixed_block", fb.position(), 0, -1, fb.width, fb.height)
+		workspace.add_item("fixed_block", fb.position(), 0, -1, fb.width, fb.height, false)
 	for sb in level_data.shiftingBlocksLocations:
-		workspace.add_item("shifting_block", sb.position(), sb.shiftingDirection, -1, sb.width, sb.height)
+		workspace.add_item("shifting_block", sb.position(), sb.shiftingDirection, -1, sb.width, sb.height, false)
 	for sg in level_data.signalGatesLocations:
-		var b_idx = workspace.add_item("signal_gate_block", sg.block_position, 0, -1, sg.block_width, sg.block_height)
-		var s_idx = workspace.add_item("signal_gate_switch", sg.switch_position, 0, b_idx, sg.switch_width, sg.switch_height)
+		var b_idx = workspace.add_item("signal_gate_block", sg.block_position, 0, -1, sg.block_width, sg.block_height, false)
+		var s_idx = workspace.add_item("signal_gate_switch", sg.switch_position, 0, b_idx, sg.switch_width, sg.switch_height, false)
 		workspace.placed_items[b_idx].linked_to = s_idx
 	for fd in level_data.fixedDangerZonesLocations:
-		workspace.add_item("fixed_danger", fd.position(), 0, -1, fd.width, fd.height)
+		workspace.add_item("fixed_danger", fd.position(), 0, -1, fd.width, fd.height, false)
 	for sd in level_data.shiftingDangerZonesLocations:
-		workspace.add_item("shifting_danger", sd.position(), sd.shiftingDirection, -1, sd.width, sd.height)
+		workspace.add_item("shifting_danger", sd.position(), sd.shiftingDirection, -1, sd.width, sd.height, false)
 	for td in level_data.timedDangerZonesLocations:
-		workspace.add_item("timed_danger", td.position(), 0, -1, td.width, td.height)
+		workspace.add_item("timed_danger", td.position(), 0, -1, td.width, td.height, false)
 	
 	workspace._deselect()
 	workspace.queue_redraw()

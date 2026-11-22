@@ -75,11 +75,12 @@ func set_boundary(size: Vector2) -> void:
 	
 	queue_redraw()
 
-func add_item(type: String, pos: Vector2, direction: int = 0, linked_to: int = -1, custom_width: int = -1, custom_height: int = -1) -> int:
+func add_item(type: String, pos: Vector2, direction: int = 0, linked_to: int = -1, custom_width: int = -1, custom_height: int = -1, snap_to_grid: bool = true) -> int:
 	var def_size = ITEM_SIZES.get(type, Vector2(20, 20))
 	var w = custom_width if custom_width > 0 else int(def_size.x)
 	var h = custom_height if custom_height > 0 else int(def_size.y)
-	var clamped_pos = _clamp_to_boundary(_snap_to_grid(pos), type, Vector2(w, h))
+	var target_pos = _snap_to_grid(pos) if snap_to_grid else pos
+	var clamped_pos = _clamp_to_boundary(target_pos, type, Vector2(w, h))
 	var item_data: Dictionary = {
 		"type": type,
 		"position": clamped_pos,
@@ -141,6 +142,18 @@ func update_item_direction(index: int, direction: int) -> void:
 		placed_items[index].direction = direction
 		_update_badge(index)
 		queue_redraw()
+
+func update_item_position(index: int, new_pos: Vector2) -> void:
+	if index < 0 or index >= placed_items.size():
+		return
+	var item = placed_items[index]
+	if item.type == "__removed__":
+		return
+	var size = Vector2(item.width, item.height) if item.has("width") and item.has("height") else ITEM_SIZES.get(item.type, Vector2(20, 20))
+	item.position = _clamp_to_boundary(new_pos, item.type, size)
+	if item.node and is_instance_valid(item.node):
+		item.node.position = item.position
+	queue_redraw()
 
 func clear_all() -> void:
 	for item in placed_items:
@@ -420,6 +433,11 @@ func _draw() -> void:
 
 # ── JSON Export ───────────────────────────────────────────────────────────────
 
+func _coord_value(val: float) -> Variant:
+	if is_equal_approx(val, roundf(val)):
+		return int(roundf(val))
+	return snappedf(val, 0.01)
+
 func generate_json() -> String:
 	var players: Array = []
 	var exits: Array = []
@@ -435,36 +453,39 @@ func generate_json() -> String:
 		if item.type == "__removed__":
 			continue
 		
-		var pos = item.position
+		var px = _coord_value(item.position.x)
+		var py = _coord_value(item.position.y)
 		var w: int = int(item.get("width", 20))
 		var h: int = int(item.get("height", 50))
 		match item.type:
 			"player":
-				players.append([int(pos.x), int(pos.y)])
+				players.append([px, py])
 			"exit":
-				exits.append([int(pos.x), int(pos.y)])
+				exits.append([px, py])
 			"fixed_block":
-				fixed_blocks.append([int(pos.x), int(pos.y), w, h])
+				fixed_blocks.append([px, py, w, h])
 			"shifting_block":
-				shifting_blocks.append([int(pos.x), int(pos.y), item.direction, w, h])
+				shifting_blocks.append([px, py, item.direction, w, h])
 			"signal_gate_block":
 				if item.linked_to >= 0 and item.linked_to < placed_items.size():
 					var switch_item = placed_items[item.linked_to]
 					if switch_item.type == "signal_gate_switch":
+						var sw_px = _coord_value(switch_item.position.x)
+						var sw_py = _coord_value(switch_item.position.y)
 						var sw_w: int = int(switch_item.get("width", 20))
 						var sw_h: int = int(switch_item.get("height", 20))
 						signal_gates.append([
-							int(pos.x), int(pos.y),
-							int(switch_item.position.x), int(switch_item.position.y),
+							px, py,
+							sw_px, sw_py,
 							w, h,
 							sw_w, sw_h
 						])
 			"fixed_danger":
-				fixed_dangers.append([int(pos.x), int(pos.y), w, h])
+				fixed_dangers.append([px, py, w, h])
 			"shifting_danger":
-				shifting_dangers.append([int(pos.x), int(pos.y), item.direction, w, h])
+				shifting_dangers.append([px, py, item.direction, w, h])
 			"timed_danger":
-				timed_dangers.append([int(pos.x), int(pos.y), w, h])
+				timed_dangers.append([px, py, w, h])
 	
 	var level_dict: Dictionary = {
 		"w": [[0, 0], [int(_boundary_size.x), int(_boundary_size.y)]],
