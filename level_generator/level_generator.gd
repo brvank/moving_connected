@@ -3,6 +3,7 @@ extends RefCounted
 
 const TILE: float = 50.0
 const MARGIN: float = 20.0
+const SHIFT_DIST: float = 100.0
 
 const DIRS: Dictionary = {
 	"U": Vector2i(-1, 0),
@@ -150,12 +151,12 @@ func generate_level(
 		var sb_out: Array = []
 		for item in sb_placed:
 			var pt: Array = _tile_center(item[0], item[1])
-			sb_out.append([pt[0], pt[1], item[2], TILE, TILE, TILE])
+			sb_out.append([pt[0], pt[1], item[2], TILE, TILE, SHIFT_DIST])
 
 		var sd_out: Array = []
 		for item in sd_placed:
 			var pt: Array = _tile_center(item[0], item[1])
-			sd_out.append([pt[0], pt[1], item[2], TILE, TILE, TILE])
+			sd_out.append([pt[0], pt[1], item[2], TILE, TILE, SHIFT_DIST])
 
 		var sg_out: Array = []
 		for g in gates:
@@ -331,17 +332,61 @@ func validate_level(level_data: Dictionary) -> Dictionary:
 		if _overlaps_any([sg[2], sg[3], sg[6], sg[7]], fb_rects):
 			errors.append("sg switch overlaps fb")
 
+	var shift_obstacles: Array = []
 	for key in ["sb", "sd"]:
 		for item in level_data["o"][key]:
 			var x: float = item[0]; var y: float = item[1]
 			var d: int = int(item[2])
 			var bw: float = item[3]; var bh: float = item[4]
-			if _overlaps_any([x, y, bw, bh], fb_rects):
-				errors.append("%s overlaps fb" % key)
-			var offsets: Array = [[0.0, -TILE], [0.0, TILE]] if d == 0 else [[-TILE, 0.0], [TILE, 0.0]]
-			for off in offsets:
-				if _overlaps_any([x + off[0], y + off[1], bw, bh], fb_rects):
+			var move_dist: float = float(item[5]) if item.size() >= 6 else SHIFT_DIST
+			var steps: Array[float] = [0.0, move_dist * 0.5, move_dist]
+
+			for s in steps:
+				var cx: float = x + (s if d == 1 else 0.0)
+				var cy: float = y + (s if d == 0 else 0.0)
+				var rect := [cx, cy, bw, bh]
+
+				if not _in_bounds(rect, w_min, w_max):
+					errors.append("%s out of bounds along travel path" % key)
+				if _overlaps_any(rect, fb_rects):
 					errors.append("%s collides with fb along travel path" % key)
+
+				# Overlap with exit points
+				for ep in level_data["e"]:
+					var ep_rect := [float(ep[0]), float(ep[1]), TILE, TILE]
+					if _rects_overlap(rect, ep_rect):
+						errors.append("%s overlaps exit point along travel path" % key)
+
+				# Overlap with player spawns
+				for pl in level_data["p"]:
+					var pl_rect := [float(pl[0]), float(pl[1]), TILE, TILE]
+					if _rects_overlap(rect, pl_rect):
+						errors.append("%s overlaps player along travel path" % key)
+
+				# Overlap with signal gates or switches
+				for sg in level_data["o"]["sg"]:
+					if _rects_overlap(rect, [sg[0], sg[1], sg[4], sg[5]]):
+						errors.append("%s overlaps sg gate along travel path" % key)
+					if _rects_overlap(rect, [sg[2], sg[3], sg[6], sg[7]]):
+						errors.append("%s overlaps sg switch along travel path" % key)
+
+				# Overlap with fixed/timed hazards
+				for fd in level_data["o"]["fd"]:
+					if _rects_overlap(rect, [fd[0], fd[1], fd[2], fd[3]]):
+						errors.append("%s overlaps fd along travel path" % key)
+				for td in level_data["o"]["td"]:
+					if _rects_overlap(rect, [td[0], td[1], td[2], td[3]]):
+						errors.append("%s overlaps td along travel path" % key)
+
+				# Overlap with other shifting obstacles along their travel paths
+				for other_rect in shift_obstacles:
+					if _rects_overlap(rect, other_rect):
+						errors.append("%s overlaps another shifting obstacle along travel path" % key)
+
+			for s in steps:
+				var cx: float = x + (s if d == 1 else 0.0)
+				var cy: float = y + (s if d == 0 else 0.0)
+				shift_obstacles.append([cx, cy, bw, bh])
 
 	return {"valid": errors.is_empty(), "errors": errors}
 
@@ -386,6 +431,9 @@ func _place_shifting_obstacles(grid: Array, count: int, open_cells: Array[Vector
 	if count <= 0:
 		return placed
 
+	var h: int = grid.size()
+	var w: int = grid[0].size() if h > 0 else 0
+
 	var candidates: Array[Vector2i] = []
 	for cell in open_cells:
 		if not reserved.has(cell):
@@ -399,22 +447,36 @@ func _place_shifting_obstacles(grid: Array, count: int, open_cells: Array[Vector
 			continue
 		var r: int = cell.x; var c: int = cell.y
 		var valid_dirs: Array[int] = []
-		if grid[r - 1][c] == 0 and grid[r + 1][c] == 0 and not reserved.has(Vector2i(r - 1, c)) and not reserved.has(Vector2i(r + 1, c)):
-			valid_dirs.append(0)
-		if grid[r][c - 1] == 0 and grid[r][c + 1] == 0 and not reserved.has(Vector2i(r, c - 1)) and not reserved.has(Vector2i(r, c + 1)):
-			valid_dirs.append(1)
+
+		# Direction 0: Vertical (moves downwards by SHIFT_DIST from (r, c) to (r + 2, c))
+		if r + 2 < h - 1:
+			if (grid[r][c] == 0 and grid[r + 1][c] == 0 and grid[r + 2][c] == 0 and
+				not reserved.has(Vector2i(r, c)) and
+				not reserved.has(Vector2i(r + 1, c)) and
+				not reserved.has(Vector2i(r + 2, c))):
+				valid_dirs.append(0)
+
+		# Direction 1: Horizontal (moves rightwards by SHIFT_DIST from (r, c) to (r, c + 2))
+		if c + 2 < w - 1:
+			if (grid[r][c] == 0 and grid[r][c + 1] == 0 and grid[r][c + 2] == 0 and
+				not reserved.has(Vector2i(r, c)) and
+				not reserved.has(Vector2i(r, c + 1)) and
+				not reserved.has(Vector2i(r, c + 2))):
+				valid_dirs.append(1)
+
 		if valid_dirs.is_empty():
 			continue
 
 		var d: int = valid_dirs[_rng.randi_range(0, valid_dirs.size() - 1)]
 		placed.append([r, c, d])
-		reserved[cell] = true
 		if d == 0:
-			reserved[Vector2i(r - 1, c)] = true
+			reserved[Vector2i(r, c)] = true
 			reserved[Vector2i(r + 1, c)] = true
+			reserved[Vector2i(r + 2, c)] = true
 		else:
-			reserved[Vector2i(r, c - 1)] = true
+			reserved[Vector2i(r, c)] = true
 			reserved[Vector2i(r, c + 1)] = true
+			reserved[Vector2i(r, c + 2)] = true
 
 	return placed
 
