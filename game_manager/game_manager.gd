@@ -16,6 +16,9 @@ var custom_level_json: String = ""
 var _completed_levels: Array[String] = []
 var _unlocked_levels: Array[String] = ["1_1"]
 
+# Debug setting: set to true to unlock all levels and sectors for testing
+@export var debug_unlock_all: bool = false
+
 func _ready() -> void:
 	load_progress()
 
@@ -59,6 +62,8 @@ func get_next_level_info() -> Dictionary:
 # ── Progression & Save / Load (Android & Cross-Platform user://) ──────────────
 
 func is_level_unlocked(world: int, level: int) -> bool:
+	if debug_unlock_all:
+		return true
 	# World 1 Level 1 is always unlocked
 	if world == 1 and level == 1:
 		return true
@@ -68,6 +73,8 @@ func is_level_completed(world: int, level: int) -> bool:
 	return _completed_levels.has("%d_%d" % [world, level])
 
 func is_world_unlocked(world: int) -> bool:
+	if debug_unlock_all:
+		return true
 	if world <= 1:
 		return true
 	# A world is unlocked if its first level is unlocked
