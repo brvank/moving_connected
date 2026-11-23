@@ -14,7 +14,10 @@ const ICON_SFX_OFF = preload("res://assets/icons/sfx_off.svg")
 func _ready() -> void:
 	play_button.pressed.connect(_on_play_pressed)
 	if editor_button:
-		editor_button.pressed.connect(_on_editor_pressed)
+		var show_editor: bool = GameManager.is_debug() if GameManager != null else OS.is_debug_build()
+		editor_button.visible = show_editor
+		if show_editor:
+			editor_button.pressed.connect(_on_editor_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
 	play_button.grab_focus()
 
