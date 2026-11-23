@@ -4,7 +4,7 @@ extends Control
 @onready var content_vbox: VBoxContainer = $VBoxContainer/ScrollContainer/ContentVBox
 
 const NUM_WORLDS: int = 4
-const LEVELS_PER_WORLD: int = 10
+const LEVELS_PER_WORLD: int = 12
 
 const WORLD_INFO := [
 	{"title": "SECTOR 1 // KINETIC BARRIERS", "color": Color(0.0, 0.85, 1.0, 1), "desc": "Fixed & shifting kinetic bulkheads"},
@@ -37,7 +37,7 @@ func _build_ui() -> void:
 		_world_headers[world] = header
 
 		var grid = GridContainer.new()
-		grid.columns = 5
+		grid.columns = 6
 		grid.add_theme_constant_override("h_separation", 20)
 		grid.add_theme_constant_override("v_separation", 20)
 		section.add_child(grid)

@@ -1,0 +1,379 @@
+================================================================================
+                       MOVING CONNECTED - LEVEL ANSWERS
+================================================================================
+Total Worlds: 4
+Levels per World: 12 (3 Easy, 3 Medium, 3 Hard, 3 Expert)
+Total Levels: 48
+
+Obstacle Types:
+  fb: Fixed Blocks (Walls)
+  sb: Shifting Blocks
+  fd: Danger Zones (Fixed)
+  sd: Shifting Danger Zones
+  td: Timed Danger Zones
+  sg: Signal Gates & Terminals
+
+Move Directions:
+  U: Up | D: Down | L: Left | R: Right
+================================================================================
+
+--------------------------------------------------------------------------------
+WORLD 1 - KINETIC BARRIERS
+Obstacles: Fixed Blocks, Shifting Blocks
+--------------------------------------------------------------------------------
+
+World 1 - Level 1 [Easy]
+  File: levels_data/world_1/level_1_1.json
+  Grid: 6x7
+  Par Moves: 7 | Wall Stalls: 3
+  Solution: UULDUUR
+  Steps: U -> U -> L -> D -> U -> U -> R
+
+World 1 - Level 2 [Easy]
+  File: levels_data/world_1/level_1_2.json
+  Grid: 7x8
+  Par Moves: 6 | Wall Stalls: 4
+  Solution: ULUUDR
+  Steps: U -> L -> U -> U -> D -> R
+
+World 1 - Level 3 [Easy]
+  File: levels_data/world_1/level_1_3.json
+  Grid: 7x7
+  Par Moves: 6 | Wall Stalls: 3
+  Solution: LLUUUU
+  Steps: L -> L -> U -> U -> U -> U
+
+World 1 - Level 4 [Medium]
+  File: levels_data/world_1/level_1_4.json
+  Grid: 9x10
+  Par Moves: 12 | Wall Stalls: 9
+  Solution: RRURRUUUULLL
+  Steps: R -> R -> U -> R -> R -> U -> U -> U -> U -> L -> L -> L
+
+World 1 - Level 5 [Medium]
+  File: levels_data/world_1/level_1_5.json
+  Grid: 9x8
+  Par Moves: 12 | Wall Stalls: 6
+  Solution: DLLDDLLLUUUD
+  Steps: D -> L -> L -> D -> D -> L -> L -> L -> U -> U -> U -> D
+
+World 1 - Level 6 [Medium]
+  File: levels_data/world_1/level_1_6.json
+  Grid: 10x8
+  Par Moves: 11 | Wall Stalls: 8
+  Solution: LULUUURRDRR
+  Steps: L -> U -> L -> U -> U -> U -> R -> R -> D -> R -> R
+
+World 1 - Level 7 [Hard]
+  File: levels_data/world_1/level_1_7.json
+  Grid: 11x13
+  Par Moves: 20 | Wall Stalls: 14
+  Solution: DRUUUUUUURDLLLURRDDD
+  Steps: D -> R -> U -> U -> U -> U -> U -> U -> U -> R -> D -> L -> L -> L -> U -> R -> R -> D -> D -> D
+
+World 1 - Level 8 [Hard]
+  File: levels_data/world_1/level_1_8.json
+  Grid: 12x12
+  Par Moves: 26 | Wall Stalls: 12
+  Solution: LLULUULLUURURUURULLLLLDDRU
+  Steps: L -> L -> U -> L -> U -> U -> L -> L -> U -> U -> R -> U -> R -> U -> U -> R -> U -> L -> L -> L -> L -> L -> D -> D -> R -> U
+
+World 1 - Level 9 [Hard]
+  File: levels_data/world_1/level_1_9.json
+  Grid: 13x11
+  Par Moves: 20 | Wall Stalls: 9
+  Solution: DRURDURRDLRRUULUUUUU
+  Steps: D -> R -> U -> R -> D -> U -> R -> R -> D -> L -> R -> R -> U -> U -> L -> U -> U -> U -> U -> U
+
+World 1 - Level 10 [Expert]
+  File: levels_data/world_1/level_1_10.json
+  Grid: 16x15
+  Par Moves: 31 | Wall Stalls: 16
+  Solution: RURUUUUUUULUUULLLDDLDLDDDRDLLLD
+  Steps: R -> U -> R -> U -> U -> U -> U -> U -> U -> U -> L -> U -> U -> U -> L -> L -> L -> D -> D -> L -> D -> L -> D -> D -> D -> R -> D -> L -> L -> L -> D
+
+World 1 - Level 11 [Expert]
+  File: levels_data/world_1/level_1_11.json
+  Grid: 14x15
+  Par Moves: 32 | Wall Stalls: 21
+  Solution: RDDRDRRRRRRRRUUUUUUUULLLDDDLLDDL
+  Steps: R -> D -> D -> R -> D -> R -> R -> R -> R -> R -> R -> R -> R -> U -> U -> U -> U -> U -> U -> U -> U -> L -> L -> L -> D -> D -> D -> L -> L -> D -> D -> L
+
+World 1 - Level 12 [Expert]
+  File: levels_data/world_1/level_1_12.json
+  Grid: 16x15
+  Par Moves: 29 | Wall Stalls: 9
+  Solution: UUDRRURRURRUUUUUULULLLLDLLLLL
+  Steps: U -> U -> D -> R -> R -> U -> R -> R -> U -> R -> R -> U -> U -> U -> U -> U -> U -> L -> U -> L -> L -> L -> L -> D -> L -> L -> L -> L -> L
+
+
+--------------------------------------------------------------------------------
+WORLD 2 - RADIATION FIELDS
+Obstacles: Fixed Blocks, Shifting Blocks, Danger Zones, Shifting Danger Zones
+--------------------------------------------------------------------------------
+
+World 2 - Level 1 [Easy]
+  File: levels_data/world_2/level_2_1.json
+  Grid: 6x8
+  Par Moves: 5 | Wall Stalls: 3
+  Solution: UUDRL
+  Steps: U -> U -> D -> R -> L
+
+World 2 - Level 2 [Easy]
+  File: levels_data/world_2/level_2_2.json
+  Grid: 8x6
+  Par Moves: 7 | Wall Stalls: 2
+  Solution: URDDLLL
+  Steps: U -> R -> D -> D -> L -> L -> L
+
+World 2 - Level 3 [Easy]
+  File: levels_data/world_2/level_2_3.json
+  Grid: 7x6
+  Par Moves: 7 | Wall Stalls: 4
+  Solution: DRRRULL
+  Steps: D -> R -> R -> R -> U -> L -> L
+
+World 2 - Level 4 [Medium]
+  File: levels_data/world_2/level_2_4.json
+  Grid: 10x9
+  Par Moves: 12 | Wall Stalls: 7
+  Solution: LDLUUDDLLURR
+  Steps: L -> D -> L -> U -> U -> D -> D -> L -> L -> U -> R -> R
+
+World 2 - Level 5 [Medium]
+  File: levels_data/world_2/level_2_5.json
+  Grid: 10x8
+  Par Moves: 12 | Wall Stalls: 9
+  Solution: ULLLLRUURUUD
+  Steps: U -> L -> L -> L -> L -> R -> U -> U -> R -> U -> U -> D
+
+World 2 - Level 6 [Medium]
+  File: levels_data/world_2/level_2_6.json
+  Grid: 10x8
+  Par Moves: 14 | Wall Stalls: 8
+  Solution: DRDDDDLLUUULLU
+  Steps: D -> R -> D -> D -> D -> D -> L -> L -> U -> U -> U -> L -> L -> U
+
+World 2 - Level 7 [Hard]
+  File: levels_data/world_2/level_2_7.json
+  Grid: 13x13
+  Par Moves: 20 | Wall Stalls: 10
+  Solution: UUULUUUURURRRDRRDDRD
+  Steps: U -> U -> U -> L -> U -> U -> U -> U -> R -> U -> R -> R -> R -> D -> R -> R -> D -> D -> R -> D
+
+World 2 - Level 8 [Hard]
+  File: levels_data/world_2/level_2_8.json
+  Grid: 13x12
+  Par Moves: 20 | Wall Stalls: 10
+  Solution: LUUUULLLDLLLURRUURRU
+  Steps: L -> U -> U -> U -> U -> L -> L -> L -> D -> L -> L -> L -> U -> R -> R -> U -> U -> R -> R -> U
+
+World 2 - Level 9 [Hard]
+  File: levels_data/world_2/level_2_9.json
+  Grid: 12x12
+  Par Moves: 20 | Wall Stalls: 13
+  Solution: DRRURRRUURRLULLDRDLL
+  Steps: D -> R -> R -> U -> R -> R -> R -> U -> U -> R -> R -> L -> U -> L -> L -> D -> R -> D -> L -> L
+
+World 2 - Level 10 [Expert]
+  File: levels_data/world_2/level_2_10.json
+  Grid: 15x13
+  Par Moves: 35 | Wall Stalls: 23
+  Solution: RRUULUUULLLLLDDDDLUUUUULLDDLDDDLLDL
+  Steps: R -> R -> U -> U -> L -> U -> U -> U -> L -> L -> L -> L -> L -> D -> D -> D -> D -> L -> U -> U -> U -> U -> U -> L -> L -> D -> D -> L -> D -> D -> D -> L -> L -> D -> L
+
+World 2 - Level 11 [Expert]
+  File: levels_data/world_2/level_2_11.json
+  Grid: 14x15
+  Par Moves: 30 | Wall Stalls: 18
+  Solution: ULUURRRRRRUUURRRULLLLLLUULLULL
+  Steps: U -> L -> U -> U -> R -> R -> R -> R -> R -> R -> U -> U -> U -> R -> R -> R -> U -> L -> L -> L -> L -> L -> L -> U -> U -> L -> L -> U -> L -> L
+
+World 2 - Level 12 [Expert]
+  File: levels_data/world_2/level_2_12.json
+  Grid: 16x16
+  Par Moves: 29 | Wall Stalls: 16
+  Solution: RDDLUULLDDDLDDLLLLLLDDLLDDLDL
+  Steps: R -> D -> D -> L -> U -> U -> L -> L -> D -> D -> D -> L -> D -> D -> L -> L -> L -> L -> L -> L -> D -> D -> L -> L -> D -> D -> L -> D -> L
+
+
+--------------------------------------------------------------------------------
+WORLD 3 - PULSING FLUX
+Obstacles: Fixed Blocks, Shifting Blocks, Danger Zones, Shifting Danger Zones, Timed Danger Zones
+--------------------------------------------------------------------------------
+
+World 3 - Level 1 [Easy]
+  File: levels_data/world_3/level_3_1.json
+  Grid: 8x6
+  Par Moves: 10 | Wall Stalls: 7
+  Solution: DRRRURRDDU
+  Steps: D -> R -> R -> R -> U -> R -> R -> D -> D -> U
+
+World 3 - Level 2 [Easy]
+  File: levels_data/world_3/level_3_2.json
+  Grid: 7x8
+  Par Moves: 10 | Wall Stalls: 4
+  Solution: URRDDDLLUR
+  Steps: U -> R -> R -> D -> D -> D -> L -> L -> U -> R
+
+World 3 - Level 3 [Easy]
+  File: levels_data/world_3/level_3_3.json
+  Grid: 8x7
+  Par Moves: 8 | Wall Stalls: 5
+  Solution: DRDDLDLU
+  Steps: D -> R -> D -> D -> L -> D -> L -> U
+
+World 3 - Level 4 [Medium]
+  File: levels_data/world_3/level_3_4.json
+  Grid: 10x9
+  Par Moves: 11 | Wall Stalls: 7
+  Solution: UULURRUURRR
+  Steps: U -> U -> L -> U -> R -> R -> U -> U -> R -> R -> R
+
+World 3 - Level 5 [Medium]
+  File: levels_data/world_3/level_3_5.json
+  Grid: 8x9
+  Par Moves: 11 | Wall Stalls: 6
+  Solution: RDDDDULLLUU
+  Steps: R -> D -> D -> D -> D -> U -> L -> L -> L -> U -> U
+
+World 3 - Level 6 [Medium]
+  File: levels_data/world_3/level_3_6.json
+  Grid: 9x9
+  Par Moves: 12 | Wall Stalls: 7
+  Solution: ULLDDDLDRRRU
+  Steps: U -> L -> L -> D -> D -> D -> L -> D -> R -> R -> R -> U
+
+World 3 - Level 7 [Hard]
+  File: levels_data/world_3/level_3_7.json
+  Grid: 12x13
+  Par Moves: 19 | Wall Stalls: 6
+  Solution: URUULULUUUURRRRDDDR
+  Steps: U -> R -> U -> U -> L -> U -> L -> U -> U -> U -> U -> R -> R -> R -> R -> D -> D -> D -> R
+
+World 3 - Level 8 [Hard]
+  File: levels_data/world_3/level_3_8.json
+  Grid: 11x12
+  Par Moves: 19 | Wall Stalls: 10
+  Solution: LLUURUUURURRDRDLLLD
+  Steps: L -> L -> U -> U -> R -> U -> U -> U -> R -> U -> R -> R -> D -> R -> D -> L -> L -> L -> D
+
+World 3 - Level 9 [Hard]
+  File: levels_data/world_3/level_3_9.json
+  Grid: 12x13
+  Par Moves: 20 | Wall Stalls: 17
+  Solution: ULDURURRRDRDRRRRDDDD
+  Steps: U -> L -> D -> U -> R -> U -> R -> R -> R -> D -> R -> D -> R -> R -> R -> R -> D -> D -> D -> D
+
+World 3 - Level 10 [Expert]
+  File: levels_data/world_3/level_3_10.json
+  Grid: 14x14
+  Par Moves: 30 | Wall Stalls: 24
+  Solution: RRRDDDRDLLLLLLDLLUUUUUUUUUUURR
+  Steps: R -> R -> R -> D -> D -> D -> R -> D -> L -> L -> L -> L -> L -> L -> D -> L -> L -> U -> U -> U -> U -> U -> U -> U -> U -> U -> U -> U -> R -> R
+
+World 3 - Level 11 [Expert]
+  File: levels_data/world_3/level_3_11.json
+  Grid: 15x15
+  Par Moves: 29 | Wall Stalls: 17
+  Solution: DRUUURRRUURRRDRDRDRDLLDLDLDUL
+  Steps: D -> R -> U -> U -> U -> R -> R -> R -> U -> U -> R -> R -> R -> D -> R -> D -> R -> D -> R -> D -> L -> L -> D -> L -> D -> L -> D -> U -> L
+
+World 3 - Level 12 [Expert]
+  File: levels_data/world_3/level_3_12.json
+  Grid: 16x13
+  Par Moves: 41 | Wall Stalls: 24
+  Solution: URRRRURUUUULLDDLDLUULLDDDDLLUUUULULDDDLLR
+  Steps: U -> R -> R -> R -> R -> U -> R -> U -> U -> U -> U -> L -> L -> D -> D -> L -> D -> L -> U -> U -> L -> L -> D -> D -> D -> D -> L -> L -> U -> U -> U -> U -> L -> U -> L -> D -> D -> D -> L -> L -> R
+
+
+--------------------------------------------------------------------------------
+WORLD 4 - QUANTUM PHASE GATES
+Obstacles: Fixed Blocks, Shifting Blocks, Danger Zones, Shifting Danger Zones, Timed Danger Zones, Signal Gates
+--------------------------------------------------------------------------------
+
+World 4 - Level 1 [Easy]
+  File: levels_data/world_4/level_4_1.json
+  Grid: 7x7
+  Par Moves: 7 | Wall Stalls: 3
+  Solution: DDDDURU
+  Steps: D -> D -> D -> D -> U -> R -> U
+
+World 4 - Level 2 [Easy]
+  File: levels_data/world_4/level_4_2.json
+  Grid: 7x6
+  Par Moves: 7 | Wall Stalls: 5
+  Solution: DLLLLRU
+  Steps: D -> L -> L -> L -> L -> R -> U
+
+World 4 - Level 3 [Easy]
+  File: levels_data/world_4/level_4_3.json
+  Grid: 8x6
+  Par Moves: 7 | Wall Stalls: 5
+  Solution: RRLDDDL
+  Steps: R -> R -> L -> D -> D -> D -> L
+
+World 4 - Level 4 [Medium]
+  File: levels_data/world_4/level_4_4.json
+  Grid: 8x9
+  Par Moves: 14 | Wall Stalls: 11
+  Solution: DRLDDRUUURULUD
+  Steps: D -> R -> L -> D -> D -> R -> U -> U -> U -> R -> U -> L -> U -> D
+
+World 4 - Level 5 [Medium]
+  File: levels_data/world_4/level_4_5.json
+  Grid: 8x9
+  Par Moves: 13 | Wall Stalls: 5
+  Solution: DLLRURULRUULL
+  Steps: D -> L -> L -> R -> U -> R -> U -> L -> R -> U -> U -> L -> L
+
+World 4 - Level 6 [Medium]
+  File: levels_data/world_4/level_4_6.json
+  Grid: 9x9
+  Par Moves: 12 | Wall Stalls: 4
+  Solution: RRRRUUUUUURL
+  Steps: R -> R -> R -> R -> U -> U -> U -> U -> U -> U -> R -> L
+
+World 4 - Level 7 [Hard]
+  File: levels_data/world_4/level_4_7.json
+  Grid: 11x12
+  Par Moves: 22 | Wall Stalls: 14
+  Solution: RDDDLDRRULURRURRRLULLL
+  Steps: R -> D -> D -> D -> L -> D -> R -> R -> U -> L -> U -> R -> R -> U -> R -> R -> R -> L -> U -> L -> L -> L
+
+World 4 - Level 8 [Hard]
+  File: levels_data/world_4/level_4_8.json
+  Grid: 13x11
+  Par Moves: 21 | Wall Stalls: 17
+  Solution: DRDDLLLLLLRUUUUURUULL
+  Steps: D -> R -> D -> D -> L -> L -> L -> L -> L -> L -> R -> U -> U -> U -> U -> U -> R -> U -> U -> L -> L
+
+World 4 - Level 9 [Hard]
+  File: levels_data/world_4/level_4_9.json
+  Grid: 11x12
+  Par Moves: 21 | Wall Stalls: 14
+  Solution: LDLDDDLDLDRDRRRURUUUR
+  Steps: L -> D -> L -> D -> D -> D -> L -> D -> L -> D -> R -> D -> R -> R -> R -> U -> R -> U -> U -> U -> R
+
+World 4 - Level 10 [Expert]
+  File: levels_data/world_4/level_4_10.json
+  Grid: 16x13
+  Par Moves: 34 | Wall Stalls: 17
+  Solution: LLLULLURURUURRURRDDDRRRRDRDDRRULLU
+  Steps: L -> L -> L -> U -> L -> L -> U -> R -> U -> R -> U -> U -> R -> R -> U -> R -> R -> D -> D -> D -> R -> R -> R -> R -> D -> R -> D -> D -> R -> R -> U -> L -> L -> U
+
+World 4 - Level 11 [Expert]
+  File: levels_data/world_4/level_4_11.json
+  Grid: 15x14
+  Par Moves: 31 | Wall Stalls: 21
+  Solution: LDDDRRUUUURURUUUULLDLDLDDDLURRL
+  Steps: L -> D -> D -> D -> R -> R -> U -> U -> U -> U -> R -> U -> R -> U -> U -> U -> U -> L -> L -> D -> L -> D -> L -> D -> D -> D -> L -> U -> R -> R -> L
+
+World 4 - Level 12 [Expert]
+  File: levels_data/world_4/level_4_12.json
+  Grid: 16x16
+  Par Moves: 39 | Wall Stalls: 21
+  Solution: DLLULLLULLLDURDDRDDDDLDDRRURURURRRDDRRD
+  Steps: D -> L -> L -> U -> L -> L -> L -> U -> L -> L -> L -> D -> U -> R -> D -> D -> R -> D -> D -> D -> D -> L -> D -> D -> R -> R -> U -> R -> U -> R -> U -> R -> R -> R -> D -> D -> R -> R -> D
+
+
