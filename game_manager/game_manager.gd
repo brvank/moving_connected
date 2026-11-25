@@ -3,6 +3,9 @@ extends Node
 var current_world: int = 1
 var current_level: int = 1
 
+# Player movement speed multiplier (controlled by SpeedMeter drag meter)
+var player_speed_multiplier: float = 1.0
+
 const PROTOTYPE_SCENE: String = "res://prototype/prototype.tscn"
 const MAIN_MENU_SCENE: String = "res://screens/main_menu/main_menu.tscn"
 const LEVEL_SELECT_SCENE: String = "res://screens/level_select/level_select.tscn"

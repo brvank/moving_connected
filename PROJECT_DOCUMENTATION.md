@@ -27,7 +27,8 @@ Comprehensive technical documentation for **Moving Connected**, a 2D multi-avata
 | `ui_right` | Right Arrow / D / D-pad Right | Moves all players right |
 | `ui_up` | Up Arrow / W / D-pad Up | Moves all players up |
 | `ui_down` | Down Arrow / S / D-pad Down | Moves all players down |
-| `Touch Controls` | On-screen 4-button D-Pad (Top, Down, Left, Right) | Responsive directional touch controls sized to half the screen height with multi-touch & sliding support |
+| `Touch Controls` | On-screen 4-button D-Pad (Top, Down, Left, Right) | Responsive directional touch controls on bottom-left, sized to half the screen height with multi-touch & sliding support |
+| `Speed Drag Meter` | Vertical drag meter on right side | Adjusts movement speed dynamically (25% to 100%) for fixed-speed directional buttons |
 | `switch_camera` | `Tab` (Physical Key 4194306), Joypad Button 9, Joypad Axis | Cycles camera focus to the next player avatar |
 
 ---
@@ -93,9 +94,10 @@ moving-connected/
 │   ├── ui/
 │   │   ├── game_dialogs.gd           # Modal overlay script (Game Over & Level Complete)
 │   │   ├── game_dialogs.tscn         # CanvasLayer UI overlay
-│   │   ├── touch_controls.gd         # Touch controls CanvasLayer overlay (4-button D-Pad)
-│   │   ├── touch_controls.tscn       # Touch controls scene with 4 directional buttons
-│   │   ├── virtual_joystick.gd       # Drag-to-move virtual joystick (DragJoystick)
+│   │   ├── touch_controls.gd         # Touch controls CanvasLayer overlay (4-button D-Pad & SpeedMeter)
+│   │   ├── touch_controls.tscn       # Touch controls scene with DPad and SpeedMeter
+│   │   ├── speed_meter.gd            # Cybernetic speed drag meter controller
+│   │   ├── virtual_joystick.gd       # Drag-to-move virtual joystick (optional)
 │   │   └── virtual_joystick.gd.uid
 │   │
 │   └── obstacles/

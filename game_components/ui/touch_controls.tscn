@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://lxed0kssw3cj" path="res://assets/icons/dpad_left.svg" id="3_left"]
 [ext_resource type="Texture2D" uid="uid://bgcp1pgk21wp6" path="res://assets/icons/dpad_right.svg" id="4_right"]
 [ext_resource type="Texture2D" uid="uid://bloanxwvnhnu4" path="res://assets/icons/dpad_down.svg" id="5_down"]
+[ext_resource type="Script" path="res://game_components/ui/speed_meter.gd" id="6_speed"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
 content_margin_left = 12.0
@@ -106,3 +107,45 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn")
 icon = ExtResource("5_down")
 icon_alignment = 1
 expand_icon = true
+
+[node name="SpeedMeter" type="Control" parent="."]
+custom_minimum_size = Vector2(75, 300)
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -91.0
+offset_top = -316.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 0
+script = ExtResource("6_speed")
+
+[node name="LabelValue" type="Label" parent="SpeedMeter"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 24.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.3, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "100%"
+horizontal_alignment = 1
+
+[node name="LabelTitle" type="Label" parent="SpeedMeter"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0.8, 1, 0.75)
+theme_override_font_sizes/font_size = 11
+text = "SPEED"
+horizontal_alignment = 1

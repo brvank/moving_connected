@@ -1,6 +1,7 @@
 extends CanvasLayer
 
-## On-screen 4-button directional touch controls (Top, Down, Left, Right).
+## On-screen 4-button directional touch controls (Top, Down, Left, Right)
+## and Cybernetic Speed Control Drag Meter.
 ## Dynamically scales to half the screen height for comfortable use on high-resolution devices.
 ## Supports multi-touch, tapping, and thumb-sliding across directional buttons.
 
@@ -9,6 +10,7 @@ extends CanvasLayer
 @onready var btn_down: Button = %BtnDown
 @onready var btn_left: Button = %BtnLeft
 @onready var btn_right: Button = %BtnRight
+@onready var speed_meter: SpeedMeter = $SpeedMeter
 
 var _button_size: float = 90.0
 var _active_touches: Dictionary = {} # int (index) -> Vector2 (local pos)
@@ -48,6 +50,7 @@ func update_layout() -> void:
 	var target_size: float = screen_h * 0.48
 	var margin: float = maxf(12.0, target_size * 0.05)
 
+	# 1. Update DPad layout on bottom-left
 	dpad.custom_minimum_size = Vector2(target_size, target_size)
 	dpad.size = Vector2(target_size, target_size)
 	dpad.anchor_left = 0.0
@@ -84,6 +87,23 @@ func update_layout() -> void:
 	btn_right.size = Vector2(b_size, b_size)
 
 	dpad.queue_redraw()
+
+	# 2. Update SpeedMeter layout on bottom-right
+	if speed_meter:
+		var meter_w: float = clampf(target_size * 0.25, 60.0, 110.0)
+		speed_meter.custom_minimum_size = Vector2(meter_w, target_size)
+		speed_meter.size = Vector2(meter_w, target_size)
+		speed_meter.anchor_left = 1.0
+		speed_meter.anchor_top = 1.0
+		speed_meter.anchor_right = 1.0
+		speed_meter.anchor_bottom = 1.0
+		speed_meter.offset_left = -margin - meter_w
+		speed_meter.offset_bottom = -margin
+		speed_meter.offset_right = -margin
+		speed_meter.offset_top = -margin - target_size
+		speed_meter.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+		speed_meter.grow_vertical = Control.GROW_DIRECTION_BEGIN
+		speed_meter.update_layout()
 
 func _on_dpad_draw() -> void:
 	var c: Vector2 = dpad.size * 0.5
