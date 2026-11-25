@@ -6,7 +6,7 @@ signal player_hit_danger(danger_zone: Area2D, body: Node2D)
 @export var width: int = 50
 @export var height: int = 50
 @export var movementDistance: float = 100.0
-@export var movementDuration: float = 1.0
+@export var movementDuration: float = 2.0
 
 var _startPosition: Vector2
 var _anim_time: float = 0.0

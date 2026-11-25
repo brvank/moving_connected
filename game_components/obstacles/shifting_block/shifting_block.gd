@@ -5,7 +5,7 @@ extends StaticBody2D
 @export var width = 50
 @export var height = 50
 @export var movementDistance: float = 100.0
-@export var movementDuration: float = 1.0
+@export var movementDuration: float = 2.0
 
 var _startPosition: Vector2
 
