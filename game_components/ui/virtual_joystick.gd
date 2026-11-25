@@ -10,6 +10,12 @@ extends Control
 @export var knob_radius: float = 26.0
 @export var deadzone: float = 0.12
 @export var dynamic_base: bool = true
+@export var auto_scale_to_screen: bool = true
+
+var _ref_base_radius: float = 70.0
+var _ref_max_radius: float = 65.0
+var _ref_knob_radius: float = 26.0
+var _scale_factor: float = 1.0
 
 var _default_center: Vector2 = Vector2.ZERO
 var _base_center: Vector2 = Vector2.ZERO
@@ -25,21 +31,91 @@ var _tween: Tween
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	_ref_base_radius = base_radius
+	_ref_max_radius = max_radius
+	_ref_knob_radius = knob_radius
+
+	if auto_scale_to_screen:
+		update_size_to_screen()
+		var vp = get_viewport()
+		if vp and not vp.size_changed.is_connected(_on_viewport_size_changed):
+			vp.size_changed.connect(_on_viewport_size_changed)
+	else:
+		_update_proportions()
+		_update_default_center()
+
+	if not resized.is_connected(_on_resized):
+		resized.connect(_on_resized)
+
+func _on_viewport_size_changed() -> void:
+	if auto_scale_to_screen:
+		update_size_to_screen()
+	else:
+		_update_proportions()
+		_update_default_center()
+
+func _on_resized() -> void:
+	_update_proportions()
 	_update_default_center()
-	resized.connect(_update_default_center)
+
+func update_size_to_screen() -> void:
+	var screen_h: float = 0.0
+	var vp = get_viewport()
+	if vp:
+		var visible_size = vp.get_visible_rect().size
+		screen_h = visible_size.y
+	if screen_h <= 0.0:
+		screen_h = get_viewport_rect().size.y
+	if screen_h <= 0.0:
+		return
+
+	var target_size: float = screen_h * 0.5
+	custom_minimum_size = Vector2(target_size, target_size)
+	size = Vector2(target_size, target_size)
+	anchor_left = 0.0
+	anchor_top = 1.0
+	anchor_right = 0.0
+	anchor_bottom = 1.0
+	offset_left = 0.0
+	offset_top = -target_size
+	offset_right = target_size
+	offset_bottom = 0.0
+	grow_horizontal = Control.GROW_DIRECTION_END
+	grow_vertical = Control.GROW_DIRECTION_BEGIN
+
+	_update_proportions()
+	_update_default_center()
+
+func _update_proportions() -> void:
+	if not auto_scale_to_screen:
+		_scale_factor = 1.0
+		return
+	if size.y > 0.0:
+		_scale_factor = size.y / 280.0
+	elif custom_minimum_size.y > 0.0:
+		_scale_factor = custom_minimum_size.y / 280.0
+	else:
+		_scale_factor = 1.0
+	base_radius = _ref_base_radius * _scale_factor
+	max_radius = _ref_max_radius * _scale_factor
+	knob_radius = _ref_knob_radius * _scale_factor
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PAUSED or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
 		_release_drag()
+	elif what == NOTIFICATION_WM_SIZE_CHANGED:
+		if auto_scale_to_screen:
+			update_size_to_screen()
 
 func _exit_tree() -> void:
 	_release_drag()
 
 func _update_default_center() -> void:
 	# Position resting center comfortably within the bottom-left control box
+	var margin: float = base_radius + 15.0 * _scale_factor
 	_default_center = Vector2(
-		clampf(130.0, base_radius + 15.0, size.x - base_radius - 15.0),
-		clampf(size.y - 130.0, base_radius + 15.0, size.y - base_radius - 15.0)
+		clampf(size.x * 0.5, margin, maxf(margin, size.x - margin)),
+		clampf(size.y * 0.5, margin, maxf(margin, size.y - margin))
 	)
 	if not _is_active:
 		_base_center = _default_center
@@ -105,10 +181,10 @@ func _start_drag(local_pos: Vector2) -> void:
 			_base_center = _default_center
 			_knob_offset = local_pos - _base_center
 		else:
-			var margin = base_radius + 15.0
+			var margin = base_radius + 15.0 * _scale_factor
 			_base_center = Vector2(
-				clampf(local_pos.x, margin, size.x - margin),
-				clampf(local_pos.y, margin, size.y - margin)
+				clampf(local_pos.x, margin, maxf(margin, size.x - margin)),
+				clampf(local_pos.y, margin, maxf(margin, size.y - margin))
 			)
 			_knob_offset = local_pos - _base_center
 	else:
@@ -209,27 +285,27 @@ func _draw() -> void:
 
 	# 2. Outer ring
 	var ring_col = Color(0.3, 0.95, 1.0, 0.85) if _is_active else Color(0.0, 0.75, 1.0, 0.45)
-	draw_arc(bc, base_radius, 0.0, TAU, 48, ring_col, 2.0)
+	draw_arc(bc, base_radius, 0.0, TAU, 48, ring_col, maxf(1.0, 2.0 * _scale_factor))
 
 	# 3. Inner tactical reference ring
-	draw_arc(bc, base_radius * 0.5, 0.0, TAU, 32, Color(0.0, 0.75, 1.0, 0.2), 1.5)
+	draw_arc(bc, base_radius * 0.5, 0.0, TAU, 32, Color(0.0, 0.75, 1.0, 0.2), maxf(1.0, 1.5 * _scale_factor))
 
 	# 4. Directional indicators (chevrons for Up, Down, Left, Right)
 	_draw_directional_indicators(bc)
 
 	# 5. Glowing Quantum Laser Tether between center and knob
-	if _knob_offset.length() > 3.0:
+	if _knob_offset.length() > 3.0 * _scale_factor:
 		# Outer laser glow
-		draw_line(bc, kp, Color(0.0, 0.8, 1.0, 0.35), 4.0)
+		draw_line(bc, kp, Color(0.0, 0.8, 1.0, 0.35), maxf(1.0, 4.0 * _scale_factor))
 		# Core laser
-		draw_line(bc, kp, Color(0.6, 1.0, 1.0, 0.85), 2.0)
+		draw_line(bc, kp, Color(0.6, 1.0, 1.0, 0.85), maxf(1.0, 2.0 * _scale_factor))
 		# Center anchor node
-		draw_circle(bc, 4.0, Color(0.3, 1.0, 1.0, 0.7))
+		draw_circle(bc, 4.0 * _scale_factor, Color(0.3, 1.0, 1.0, 0.7))
 
 	# 6. Knob / Thumbstick
 	# Outer glow
 	var glow_col = Color(0.0, 0.85, 1.0, 0.45 if _is_active else 0.2)
-	draw_circle(kp, knob_radius + 4.0, glow_col)
+	draw_circle(kp, knob_radius + 4.0 * _scale_factor, glow_col)
 
 	# Knob body fill
 	var body_col = Color(0.08, 0.22, 0.4, 0.95) if _is_active else Color(0.05, 0.1, 0.2, 0.9)
@@ -237,15 +313,15 @@ func _draw() -> void:
 
 	# Knob border
 	var knob_border_col = Color(0.4, 1.0, 1.0, 1.0) if _is_active else Color(0.0, 0.8, 1.0, 0.75)
-	draw_arc(kp, knob_radius, 0.0, TAU, 32, knob_border_col, 2.0)
+	draw_arc(kp, knob_radius, 0.0, TAU, 32, knob_border_col, maxf(1.0, 2.0 * _scale_factor))
 
 	# Inner core
 	var core_col = Color(0.7, 1.0, 1.0, 1.0) if _is_active else Color(0.3, 0.95, 1.0, 0.75)
-	draw_circle(kp, 8.0, core_col)
-	draw_circle(kp, 3.0, Color(1.0, 1.0, 1.0, 0.95))
+	draw_circle(kp, 8.0 * _scale_factor, core_col)
+	draw_circle(kp, 3.0 * _scale_factor, Color(1.0, 1.0, 1.0, 0.95))
 
 func _draw_directional_indicators(bc: Vector2) -> void:
-	var r = base_radius - 12.0
+	var r = base_radius - 12.0 * _scale_factor
 	var active_threshold = 0.35
 	var norm = _input_vector
 
@@ -262,12 +338,12 @@ func _draw_directional_indicators(bc: Vector2) -> void:
 		var center_pt = bc + dir_vec * r
 
 		var perp = Vector2(-dir_vec.y, dir_vec.x)
-		var tip = center_pt + dir_vec * 6.0
-		var base1 = center_pt - dir_vec * 4.0 + perp * 5.0
-		var base2 = center_pt - dir_vec * 4.0 - perp * 5.0
+		var tip = center_pt + dir_vec * (6.0 * _scale_factor)
+		var base1 = center_pt - dir_vec * (4.0 * _scale_factor) + perp * (5.0 * _scale_factor)
+		var base2 = center_pt - dir_vec * (4.0 * _scale_factor) - perp * (5.0 * _scale_factor)
 
 		var tri = PackedVector2Array([tip, base1, base2])
 		if is_dir_active:
 			draw_colored_polygon(tri, Color(0.4, 1.0, 1.0, 0.95))
 		else:
-			draw_polyline(PackedVector2Array([base1, tip, base2]), Color(0.0, 0.75, 1.0, 0.35), 1.5)
+			draw_polyline(PackedVector2Array([base1, tip, base2]), Color(0.0, 0.75, 1.0, 0.35), maxf(1.0, 1.5 * _scale_factor))
