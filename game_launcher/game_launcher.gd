@@ -76,6 +76,7 @@ func _exit_tree() -> void:
 func _physics_process(delta: float) -> void:
 	_update_camera(delta)
 	_update_thruster_sound()
+	_check_win_condition()
 
 func _update_thruster_sound() -> void:
 	var is_moving = false

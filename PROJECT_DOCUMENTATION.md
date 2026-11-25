@@ -11,7 +11,7 @@ Comprehensive technical documentation for **Moving Connected**, a 2D multi-avata
 - **Simultaneous Input:** All players receive identical movement inputs (`ui_left`, `ui_right`, `ui_up`, `ui_down`) and move in unison at the same speed.
 - **Visual Connection:** All players are linked by a quantum plasma `Line2D` polygon that stretches dynamically between them.
 - **Scalable Avatars & Exits:** Supports an arbitrary number of quantum avatars ($N$) and extraction portals specified via JSON.
-- **Level Objective:** Every extraction pad must be occupied simultaneously by a distinct avatar (1-to-1 matching) to achieve extraction.
+- **Level Objective:** Every extraction pad must be occupied simultaneously by a distinct avatar (1-to-1 matching) to achieve extraction. Players must be inside the exit point boundaries rather than merely touching their outer edge.
 - **Hazards & Puzzles:** Players must negotiate kinetic barriers, shifting bulkheads, quantum signal gates (matrix terminals), and lethal radiation fields (static, moving, and timed).
 - **Camera Tracking:** Smooth physics camera centered on player centroid with dynamic auto-zoom and bounds clamping.
 - **Multi-Level Architecture:** Hierarchical sector structure grouped by world (Sectors 1–4), driven by a global `GameManager` singleton.
@@ -218,7 +218,7 @@ Root orchestrator of gameplay inside `prototype.tscn`:
 - **Line2D (`prototype/line_2d.gd`):** Dynamic polygon connecting all active avatars.
 - **Exit Points (`game_components/obstacles/exit_point/`):**
   - Size: 50×50 px.
-  - Green when unoccupied, turns bright yellow upon player entry.
+  - Dark teal/green base when unoccupied, turns bright cyan with accelerated core pulse when a player is completely inside the pad. Triggers level completion when all distinct players are inside their respective exit points.
 - **Signal Gate (`game_components/obstacles/signal_gate/`):**
   - Gate block (20×50, solid purple).
   - Remote switch (20×20, green). Stepping on the switch opens the gate (disables collision).
