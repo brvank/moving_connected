@@ -20,7 +20,7 @@ var _completed_levels: Array[String] = []
 var _unlocked_levels: Array[String] = ["1_1"]
 
 # Debug settings
-@export var debug_mode: bool = false
+@export var debug_mode: bool = true
 
 func is_debug() -> bool:
 	return debug_mode
